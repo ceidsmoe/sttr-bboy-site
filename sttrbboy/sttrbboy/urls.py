@@ -16,6 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+admin.autodiscover()
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^', include('sttrbboy.hunt.urls')),
+    url(r'^users/', include('sttrbboy.users.urls'))
+    url(r'^contact/$', views.ContactPage.as_view(), name="contact"),
 ]
