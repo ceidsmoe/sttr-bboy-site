@@ -19,6 +19,26 @@ class Hunt(models.Model):
 	def __unicode__(self):
 		return self.name
 
+	@property
+	def status(self):
+		if self.start_date and self.end_date:
+			now = timezone.now
+			if self.start_date < now < self.end_date:
+				return 'in_progress'
+			elif now > self.end_date:
+				return 'finished'
+			else:
+				return 'future'
+		else:
+			return 'N/A'
+
+	def get_scavvies(self):
+		self.scavvies.all()
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ('hunt|show', [self.pk])
+
 class Item(models.Model):
 	number = models.IntegerField(unique=True)
 	points = models.DecimalField(max_digits=8, decimal_places=5)

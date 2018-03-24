@@ -11,5 +11,5 @@ urlpatterns = patterns('',
 
     url(r'^$', ListHunts.as_view(), name='hunt|list'),
     url(r'^hunt/(?P<pk>[0-9]+)/$', ShowHunt.as_view(), name='hunt|show'),
-    url(r'^game/(?P<pk>[0-9]+)/register/$', RegisterForHunt.as_view(), name='hunt|register'),
+    url(r'^hunt/(?P<pk>[0-9]+)/register/$', RegisterForHunt.as_view(), name='hunt|register'),
 )
