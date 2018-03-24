@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h1>Contact Us</h1>
+</div>
+
+<p>Please contact a game moderator if you have any questions or concerns.</p>
+<table class="table">
+{% for m in moderators %}
+    <tr>
+        <td><b>{{ m.title }}</b></td>
+        <td>{{ m.name }}</td>
+        <td><a href="mailto:{{ m.email }}">{{ m.email }}</a></td>
+        <td>{% if user.is_authenticated %}{{ m.phone_number }}{% else %}&nbsp;{% endif %}</td>
+    </tr>
+{% endfor %}
+</table>
+
+<p>To contact all moderators at once, send an email to
+<b><a href="mailto:zombies-request@lists.uchicago.edu">zombies-request@lists.uchicago.edu</a></b>.</p>
+
+<p>For bug reports and any other urgent inquiries regarding the functionality of this website during gameplay,
+please email <b><a href="mailto:admin@uchicagohvz.org">admin@uchicagohvz.org</a></b>.</p>
+{% endblock %}

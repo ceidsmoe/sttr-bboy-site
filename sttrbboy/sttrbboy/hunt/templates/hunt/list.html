@@ -10,7 +10,7 @@
 		{{ hunt.year }}
 	  </a></h1>
 	  <h3>
-	    if hunt.status == "in_progress" %}
+	    {% if hunt.status == "in_progress" %}
 	    <span class="text-success">LIVE</span>
 	    {% elif hunt.status == "finished" %}
 	    <span class="text-info">Finished</span>

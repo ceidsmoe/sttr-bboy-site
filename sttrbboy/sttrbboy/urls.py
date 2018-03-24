@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('sttrbboy.hunt.urls')),
     url(r'^users/', include('sttrbboy.users.urls')),
-    #url(r'^contact/$', views.ContactPage.as_view(), name="contact"),
+    url(r'^contact/$', views.ContactPage.as_view(), name="contact"),
 ]
