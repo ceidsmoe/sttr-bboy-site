@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.utils.decorators import method_decorator
 from sttrbboy.users import forms
-from sttrboy.users.models import Profile
+from sttrbboy.users.models import Profile
 from datetime import timedelta
 from django.http import HttpResponseRedirect
 
