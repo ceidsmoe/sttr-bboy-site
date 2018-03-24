@@ -42,7 +42,34 @@
 						<li class="active"><a href="/">Home</a></li>
 						{% if user.is_staff %}<li><a href="{% url "admin:index" %}">Admin Panel</a></li>{% endif %}
 						<li><a href="{% url 'contact' %}">Contact</a></li>
+						<li><a href="{% url 'about' %}">About</a></li>
+						{% if not user.is_authenticated %}
+						<li><a href="{% url 'users|register' %}">No CNetID?</a></li>
+						{% endif %}-->
 					</ul>
+					{% if user.is_authenticated %}
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.get_full_name }} ({{ user.username }}) <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+							        <li><a href="{% url 'users|profile' pk=user.pk|add:'-1' %}">My Profile</a></li>
+								<li><a href="{% url 'users|account' %}">My Account</a></li>
+								<li><a href="{% url 'users|logout' %}">Logout</a></li>
+							</ul>
+						</li>
+					</ul>
+					{% else %}
+					<form class="navbar-form navbar-right" action="{% url 'users|login' %}?next={{ request.path }}" method="post">
+						{% csrf_token %}
+						<div class="form-group">
+							<input type="text" name="username" placeholder="CNetID" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<input type="password" name="password" placeholder="Password" class="form-control" required>
+						</div>
+						<button type="submit" class="btn btn-success">Sign in</button>
+					</form>
+					{% endif %}
 				</div><!--/.navbar-collapse -->
 			</div>
 		</div>
@@ -61,7 +88,7 @@
 			<footer>
 				<ul class="list-unstyled">
 					<li>&copy; 2018-{% now "Y" %} Chris Eidsmoe and Noah Baskes on behalf of STTR-BBoY Scavenger Hunt Team</li>
-					<li><a href="">Terms and Conditions</a></li>
+					<li><a href="{% url 'terms' %}">Terms and Conditions</a></li>
 				</ul>
 			</footer>
 		</div> <!-- /container -->
