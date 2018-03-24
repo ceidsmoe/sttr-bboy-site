@@ -16,6 +16,7 @@ class UserRegistrationForm(forms.ModelForm):
 		self.fields['email'].help_text = "Enter your email address."
 		self.fields['password'].help_text = "Enter a password."
 		self.fields['password'].widget = forms.PasswordInput()
+
 	def clean(self):
 		data = super(UserRegistrationForm, self).clean()
 		username = data.get('username')
@@ -30,7 +31,7 @@ class UserRegistrationForm(forms.ModelForm):
 			User.objects.get(username=username)
 			self.error_class(['Someone already has that username.'])
 		except User.DoesNotExist:
-			pass		
+			pass
 		return data
 
 

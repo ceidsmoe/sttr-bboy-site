@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+  <h1>My Profile</h1>
+</div>
+
+<div class="row">
+  <dl style="font-size: 18pt">
+    <dt>Games Played</dt>
+    <dd>{{ participation }}</dd>
+
+    <dt>Deaths</dt>
+    <dd>{{ deaths }}</dd>
+
+    <dt>Average Time Survived</dt>
+    <dd>{{ average_lifespan }}</dd>
+    
+    <dt>Longest Time Survived</dt>
+    <dd>{{ longest_life }}</dd>
+
+    <dt>Kills</dt>
+    <dd>{{ total_kills }}</dd>
+
+    <dt>Total Zombie Points</dt>
+    <dd>{{ total_zombie_points }}</dd>
+
+    <dt>Total Human Points</dt>
+    <dd>{{ total_human_points }}</dd>
+    
+</div>
+{% endblock %}

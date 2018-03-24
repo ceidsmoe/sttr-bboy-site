@@ -85,7 +85,7 @@ class UChicagoLDAPBackend(object):
             ou = user_data.get('ou')
             if ou:
                 for v in ou:
-                    if v.find("College:") == 0
-                    return v
+                    if v.find("College:") == 0:
+                        return v
                 return ou[0]
         return 'N/A'

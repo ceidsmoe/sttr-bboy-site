@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<br><p>Looks like you already have an account. If you're not {{ user.get_full_name }}, please logout and return to this page.</p><br>
+
+<a href='/'>Return to home.</a>
+{% else %}
+<div class="page-header">
+	<h1>Create New User</h1>
+	<small>Not a student or faculty member of UChicago? No problem! Fill out this form and just log in to register for games.</small>
+</div>
+
+<form class="form-horizontal" method="post">
+{% csrf_token %}
+<br>
+{% for field in form %}
+{{ field }}
+{{ field.help_text }}
+{{ field.errors }}<br /><br />
+{% endfor %}
+<input class="btn btn-success" type="submit" name="submit" value="Submit"/>
+</form>
+{% endif %}
+{% endblock %}
