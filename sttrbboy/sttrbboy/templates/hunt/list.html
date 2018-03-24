@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<img src="{{ STATIC_URL }}img/uchicagohvz-logo.png" alt="UChicago HvZ logo" class="img-responsive" style="display: block; margin: auto;">
+
+{% for hunt in object_list %}
+<div class="row">
+	<div class="col-md-6">
+	  <h1><a class="btn btn-default btn-lg btn-block" href="{% url 'hunt|show' pk=hunt.pk %}">
+		{{ hunt.year }}
+	  </a></h1>
+	  <h3>
+	    if hunt.status == "in_progress" %}
+	    <span class="text-success">LIVE</span>
+	    {% elif hunt.status == "finished" %}
+	    <span class="text-info">Finished</span>
+	    {% elif hunt.status == "future" %}
+	    <span class="text-warning">Future hunt</span>
+	    {% endif %}
+	  </h3>
+	  
+	</div>
+	<div class="col-md-6">
+	  <dl class="dl-horizontal" style="margin-top: 20px;">
+	    <dt>Hunt starts</dt>
+	    <dd>{{ hunt.start_date }}</dd>
+	    <dt>Hunt ends</dt>
+	    <dd>{{ hunt.end_date }}</dd>
+	  </dl>
+	</div>
+</div>
+{% empty %}
+<h2>No hunts are available at this time.</h2>
+{% endfor %}
+{% endblock %}

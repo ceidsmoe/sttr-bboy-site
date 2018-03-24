@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from sttrbboy.users import *
+from sttrbboy.overwrite_fs import OverwriteFileSystemStorage
+from sttrbboy import settings
 
 
-def gen_rules_filename(instance, fn):
+def gen_list_filename(instance, fn):
 	return "lists/%s%s" % (instance.name, os.path.splitext(fn)[1])
 
 # Create your models here.
@@ -39,13 +40,23 @@ class Hunt(models.Model):
 	def get_absolute_url(self):
 		return ('hunt|show', [self.pk])
 
+class Scavvie(models.Model):
+	class Meta:
+		unique_together = (('user', 'hunt'))
+
+	page_captain = models.BooleanField(default=False)
+	captain = models.BooleanField(default=False)
+	hunt = models.ForeignKey(Hunt, related_name='scavvies')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
+
+
 class Item(models.Model):
 	number = models.IntegerField(unique=True)
 	points = models.DecimalField(max_digits=8, decimal_places=5)
 	short_desc = models.CharField(max_length=128)
-	full_desc = TextField(blank=True)
+	full_desc = models.TextField(blank=True)
 	completed = models.BooleanField(default=False)
-	started = models.BooleanField(defaul=False)
+	started = models.BooleanField(default=False)
 
 	hunt = models.ForeignKey(Hunt, related_name='items')
 	page_captain = models.ForeignKey(Scavvie, related_name='page_items')

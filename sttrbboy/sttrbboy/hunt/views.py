@@ -1,7 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import *
+from django.conf import settings
+from django.db import transaction
+from django.db.models.expressions import RawSQL
+from django.contrib import messages
+from django.http import *
+from django.core.exceptions import *
+from django.views.generic import *
+from django.views.generic.edit import BaseFormView
+from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import *
+from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
 
 from sttrbboy.hunt.models import *
 from sttrbboy.users.models import *
@@ -34,7 +47,7 @@ class ShowHunt(DetailView):
 		return context
 
 
-class RegisterForHunt(FormView):
+"""class RegisterForHunt(FormView):
 	form_class = HuntRegistrationForm
 	template_name = "hunt/register.html"
 
@@ -61,4 +74,4 @@ class RegisterForHunt(FormView):
 	def get_form_kwargs(self):
 		kwargs = super(RegisterForHunt, self).get_form_kwargs()
 		kwargs['hunt'] = self.hunt
-		return kwargs
+		return kwargs"""
