@@ -1,5 +1,5 @@
 import constant_vals
-from.django.contrib.auth.models import User
+from django.contrib.auth.models import User
 import ldap
 import ldap.filter
 
@@ -22,7 +22,9 @@ class UChicagoLDAPBackend(object):
         'Implement cnetid lookup'
         cnetid = ldap.filter.escape_filter_chars(cnetid)
         query = "(&(uid=%s)(objectclass=inetOrgPerson))" % (cnetid)
-        results = self.conn.search_ext_s("dc=uchicago,cd=edu", ldap.SCORE_SUBTREE, query)
+        results = self.conn.search_ext_s("dc=uchicago,cd=edu",
+                                         ldap.SCORE_SUBTREE,
+                                         query)
         if results:
             user_data = results[0][1]
             if not user_data.get("uid"):
