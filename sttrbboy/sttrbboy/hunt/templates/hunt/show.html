@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+	<h1>{{ hunt.name }}</h1>
+</div>
+
+
+
+<div class="row">
+	<div class="col-lg-4">
+		<h2>Important Dates</h2>
+		<dl class="dl-horizontal">
+			<dt>Hunt starts</dt>
+			<dd>{{ hunt.start_date }}</dd>
+			<dt>Hunt ends</dt>
+			<dd>{{ hunt.end_date }}</dd>
+		</dl>
+	</div>
+	<div class="col-lg-4">
+		<h2>Hunt Status</h2>
+		{% if hunt.status == "in_progress" %}
+		<h4 class="text-success">LIVE</h4>
+		<p><b>{{ hunt.end_date|timeuntil }}</b> until it all ends.</p>
+		{% elif hunt.status == "finished" %}
+		<h4 class="text-info">Finished</h4>
+		{% elif hunt.status == "future" %}
+		<h4 class="text-warning">Future hunt</h4>
+		{% endif %}
+		{% if not scavvie %}
+		<p><a class="btn btn-primary" href="{% url 'hunt|register' pk=hunt.pk %}">Register</a></p>
+		{% endif %}
+	</div>
+	<div class="col-lg-4">
+		<h2>Items</h2>
+	</div>
+</div>
+
+{% if scavvie %}
+<hr>
+<div class="row">
+	<div class="col-lg-4">
+		<h2>My Info</h2>
+		<dl class="dl-horizontal">
+			<dt>Your dorm</dt>
+			<dd>{{ scavvie.name }}</dd>
+		</dl>
+	</div>
+</div>
+{% endif %}
+
+{% if hunt.status == "in_progress" or hunt.status == "finished" %}
+<div class="center">
+	<h2>Average Kills per Hour</h2>
+	<p class="lead text-danger">5</p>
+	{% if hunt.status == 'in_progress' %}<p>All data below is updated in real time.</p>{% endif %}
+</div>
+
+
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+{% include 'includes/moment.html' %}
+{% include 'includes/highcharts.html' %}
+{% endblock %}

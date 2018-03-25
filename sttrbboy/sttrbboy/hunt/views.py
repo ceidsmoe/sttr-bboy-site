@@ -18,6 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from sttrbboy.hunt.models import *
 from sttrbboy.users.models import *
+from sttrbboy.hunt.forms import *
 
 # Create your views here.
 class ListHunts(ListView):
@@ -47,7 +48,7 @@ class ShowHunt(DetailView):
 		return context
 
 
-"""class RegisterForHunt(FormView):
+class RegisterForHunt(FormView):
 	form_class = HuntRegistrationForm
 	template_name = "hunt/register.html"
 
@@ -74,4 +75,4 @@ class ShowHunt(DetailView):
 	def get_form_kwargs(self):
 		kwargs = super(RegisterForHunt, self).get_form_kwargs()
 		kwargs['hunt'] = self.hunt
-		return kwargs"""
+		return kwargs

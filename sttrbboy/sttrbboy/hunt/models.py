@@ -69,6 +69,8 @@ class Item(models.Model):
 	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items')
 	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items')
 
+	def __unicode__(self):
+		return "Item %d - %s" % (self.number, self.short_desc)
 
 class Comment(models.Model):
 	text = models.CharField(max_length=512)

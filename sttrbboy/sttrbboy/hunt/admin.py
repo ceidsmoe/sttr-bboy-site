@@ -13,5 +13,9 @@ class ScavvieAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'user', 'hunt', 'page_captain', 'captain')
 
 
+class ItemAdmin(admin.ModelAdmin):
+	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt', 'page_captain')
+
 admin.site.register(Hunt, HuntAdmin)
 admin.site.register(Scavvie, ScavvieAdmin)
+admin.site.register(Item, ItemAdmin)
