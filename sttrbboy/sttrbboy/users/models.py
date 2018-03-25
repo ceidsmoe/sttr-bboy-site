@@ -12,6 +12,10 @@ class Profile(models.Model):
 	#phone_number = PhoneNumberField(blank=True)
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ("users|account",)
+
 def get_or_create_profile(sender, **kwargs):
 	if not kwargs.get('raw'):
 		profile, created = Profile.objects.get_or_create(user=kwargs['instance'])

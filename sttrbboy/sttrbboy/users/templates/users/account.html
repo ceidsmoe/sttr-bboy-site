@@ -14,67 +14,17 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_phone_carrier" class="col-lg-2 control-label">Phone carrier</label>
+		<label for="id_name" class="col-lg-2 control-label">Name</label>
 		<div class="col-lg-3">
-			{{ form.phone_carrier }}
-			{{ form.phone_carrier.errors }}
+			{{ form.name }}
+			{{ form.name.errors }}
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_last_words" class="col-lg-2 control-label">Your last words</label>
+		<label for="id_pronouns" class="col-lg-2 control-label">Preferred Gender Pronouns</label>
 		<div class="col-lg-3">
-			<input id="id_last_words" class="form-control" type="text" name="last_words" value="{{ form.last_words.value|default_if_none:"" }}">
-			{{ form.last_words.errors }}
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<div class="checkbox">
-				<label>
-					{{ form.subscribe_death_notifications }} Send me death notifications via text*
-				</label>
-				{{ form.subscribe_death_notifications.errors }}
-				<p class="text-default">* Standard text messaging rates apply.
-				{% if not form.phone_number.value %}<b>You'll need to provide your phone number and carrier first.</b>{% endif %}
-				</p>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<div class="checkbox">
-				<label>
-					{{ form.subscribe_zombie_texts }} Send me text message announcements from the Lead Zombie*
-				</label>
-				{{ form.subscribe_zombie_texts.errors }}
-				<p class="text-default">* Standard text messaging rates apply.
-				{% if not form.phone_number.value %}<b>You'll need to provide your phone number and carrier first.</b>{% endif %}
-				</p>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<div class="checkbox">
-				<label>
-					{{ form.subscribe_chatter_listhost }} Subscribe me to the HvZ-chatter listhost -
-					<b><a href="mailto:chatter@lists.uchicagohvz.org">chatter@lists.uchicagohvz.org</a></b>
-				</label>
-				{{ form.subscribe_chatter_listhost.errors }}
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<div class="checkbox">
-				<label>
-					{{ form.subscribe_zombies_listhost }} Subscribe me to the zombies listhost
-				</label>
-				<p class="help-block">
-					{{ form.subscribe_zombies_listhost.help_text }}
-				</p>
-				{{ form.subscribe_zombies_listhost.errors }}
-			</div>
+			{{ form.gender_pronouns }}
+			{{ form.gender_pronouns.errors }}
 		</div>
 	</div>
 	<div class="form-group">

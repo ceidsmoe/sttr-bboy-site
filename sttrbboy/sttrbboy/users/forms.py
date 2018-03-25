@@ -35,8 +35,15 @@ class UserRegistrationForm(forms.ModelForm):
 		return data
 
 
-class ProfileForm(forms.ModelForm):
+def validate_phone_number(phone_str):
+    phone_str = phone_str.replace(".", "").replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
+    if phone_str[0] == "1":
+        phone_str = phone_str[1:]
+    if len(phone_str) != 10:
+        raise ValidationError('Invalid Phone Number')
 
+
+class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = Profile
 		exclude = ('user',)
@@ -44,3 +51,8 @@ class ProfileForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
 		super(ProfileForm, self).__init__(*args, **kwargs)
+
+	def clean(self):
+		data = super(ProfileForm, self).clean()
+		phone_number = data.get('phone_number')
+		return data
