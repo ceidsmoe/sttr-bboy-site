@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+
 from django.db import models
+from django.utils import timezone
 
 from sttrbboy.overwrite_fs import OverwriteFileSystemStorage
 from sttrbboy import settings
 
 
 def gen_list_filename(instance, fn):
-	return "lists/%s%s" % (instance.name, os.path.splitext(fn)[1])
+	return "lists/%d%s" % (instance.year, os.path.splitext(fn)[1])
 
 # Create your models here.
 class Hunt(models.Model):
@@ -18,12 +21,12 @@ class Hunt(models.Model):
 	list_pdf = models.FileField(upload_to=gen_list_filename, storage=OverwriteFileSystemStorage())
 
 	def __unicode__(self):
-		return self.name
+		return str(self.year)
 
 	@property
 	def status(self):
 		if self.start_date and self.end_date:
-			now = timezone.now
+			now = timezone.now()
 			if self.start_date < now < self.end_date:
 				return 'in_progress'
 			elif now > self.end_date:
@@ -48,6 +51,9 @@ class Scavvie(models.Model):
 	captain = models.BooleanField(default=False)
 	hunt = models.ForeignKey(Hunt, related_name='scavvies')
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
+
+	def __unicode__(self):
+		return self.user.profile.name
 
 
 class Item(models.Model):

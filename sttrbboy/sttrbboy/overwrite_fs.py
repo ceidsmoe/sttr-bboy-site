@@ -7,5 +7,5 @@ class OverwriteFileSystemStorage(FileSystemStorage):
 			self.delete(name)
 		return super(OverwriteFileSystemStorage, self)._save(name, content)
 
-	def get_available_name(self, name):
+	def get_available_name(self, name, max_length=None):
 		return name
