@@ -35,6 +35,9 @@ class ShowHunt(DetailView):
 			if self.object.items.count() > 0:
 				context['items'] = self.object.items.all()
 
+			if self.object.pages.count() > 0:
+				context['pages'] = self.object.pages.all()
+
 				
 		if self.request.user.is_authenticated():
 			in_hunt = Scavvie.objects.filter(hunt=self.object, user=self.request.user).exists()

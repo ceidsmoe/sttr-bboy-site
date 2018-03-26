@@ -7,7 +7,6 @@ urlpatterns = [
     url(r'^login/$', views.login, name="users|login"),
     url(r'^logout/$', views.logout, name="users|logout"),
     url(r'^contact/$', views.ContactPage.as_view(), name="contact"),
-    url(r'^profile/(?P<pk>[0-9]+)/$', views.ShowProfile.as_view(), name="users|profile"),
     url(r'^account/$', views.MyAccount.as_view(), name="users|account"),
     url(r'^register/$', views.RegisterUser.as_view(), name="users|register"),
 

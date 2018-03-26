@@ -55,14 +55,6 @@ class ResetPassword(FormView):
         return HttpResponseRedirect("/")
 
 
-class ShowProfile(DetailView):
-    model = Profile
-    template_name = "users/profile.html"
-
-    def get_context_data(self, **kwargs):
-        return super(ShowProfile, self).get_context_data(**kwargs)
-
-
 class MyAccount(UpdateView):
     form_class = forms.ProfileForm
     template_name = "users/account.html"

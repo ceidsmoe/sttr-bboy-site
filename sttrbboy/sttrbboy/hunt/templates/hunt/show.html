@@ -50,9 +50,9 @@
 
 {% if hunt.status == "in_progress" or hunt.status == "finished" %}
 <div class="center">
-	<h2>Average Kills per Hour</h2>
-	<p class="lead text-danger">5</p>
-	{% if hunt.status == 'in_progress' %}<p>All data below is updated in real time.</p>{% endif %}
+	{% for page in pages %}
+	<h2>Page {{ page.number }}</h2>
+	{% endfor %}
 </div>
 
 

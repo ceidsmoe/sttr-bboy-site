@@ -12,10 +12,17 @@ class HuntAdmin(admin.ModelAdmin):
 class ScavvieAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'user', 'hunt', 'page_captain', 'captain')
 
+class PageAdmin(admin.ModelAdmin):
+	list_display = ('__unicode__', 'page_captain')
 
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt', 'page_captain')
 
+class CommentAdmin(admin.ModelAdmin):
+	list_display = ('__unicode__', 'item', 'scavvie')
+
 admin.site.register(Hunt, HuntAdmin)
 admin.site.register(Scavvie, ScavvieAdmin)
+admin.site.register(Page, PageAdmin)
 admin.site.register(Item, ItemAdmin)
+admin.site.register(Comment, CommentAdmin)

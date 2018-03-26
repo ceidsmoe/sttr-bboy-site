@@ -18,7 +18,7 @@ class Hunt(models.Model):
 	year = models.IntegerField()
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField()
-	list_pdf = models.FileField(upload_to=gen_list_filename, storage=OverwriteFileSystemStorage())
+	list_pdf = models.FileField(upload_to=gen_list_filename, storage=OverwriteFileSystemStorage(), blank=True)
 
 	def __unicode__(self):
 		return str(self.year)
@@ -45,7 +45,7 @@ class Hunt(models.Model):
 
 class Scavvie(models.Model):
 	class Meta:
-		unique_together = (('user', 'hunt'))
+		unique_together = ('user', 'hunt')
 
 	page_captain = models.BooleanField(default=False)
 	captain = models.BooleanField(default=False)
@@ -56,16 +56,31 @@ class Scavvie(models.Model):
 		return self.user.profile.name
 
 
+class Page(models.Model):
+	class Meta:
+		unique_together = ('number', 'hunt')
+
+	number = models.IntegerField()
+	hunt = models.ForeignKey(Hunt, related_name='pages')
+	page_captain = models.ForeignKey(Scavvie, related_name='pages')
+
+	def __unicode__(self):
+		return "Page %d" % self.number
+
 class Item(models.Model):
-	number = models.IntegerField(unique=True)
+	class Meta:
+		unique_together = ('number', 'hunt')
+
+	number = models.IntegerField()
 	points = models.DecimalField(max_digits=8, decimal_places=5)
 	short_desc = models.CharField(max_length=128)
 	full_desc = models.TextField(blank=True)
 	completed = models.BooleanField(default=False)
 	started = models.BooleanField(default=False)
 
+	page = models.ForeignKey(Page, related_name='items')
 	hunt = models.ForeignKey(Hunt, related_name='items')
-	page_captain = models.ForeignKey(Scavvie, related_name='page_items')
+	page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
 	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items')
 	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items')
 
@@ -75,3 +90,4 @@ class Item(models.Model):
 class Comment(models.Model):
 	text = models.CharField(max_length=512)
 	item = models.ForeignKey(Item, related_name='comments')
+	scavvie = models.ForeignKey(Scavvie, related_name='comments')
