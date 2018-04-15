@@ -51,6 +51,20 @@ class ShowHunt(DetailView):
 		return context
 
 
+class ShowPage(DetailView):
+	model = Page
+	template_name = 'hunt/show_page.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(ShowPage, self).get_context_data(**kwargs)
+		if self.object.items.count() > 0:
+			context['items'] = self.object.items.all()
+		else:
+			context['items'] = None
+
+		return context
+
+
 class RegisterForHunt(FormView):
 	form_class = HuntRegistrationForm
 	template_name = "hunt/register.html"
