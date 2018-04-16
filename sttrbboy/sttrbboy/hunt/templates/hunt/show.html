@@ -41,7 +41,7 @@
 	<div class="col-lg-4">
 		<h2>My Info</h2>
 		<dl class="dl-horizontal">
-			<dt>Your dorm</dt>
+			<dt>Your items</dt>
 			<dd>{{ scavvie.name }}</dd>
 		</dl>
 	</div>
@@ -51,7 +51,7 @@
 {% if hunt.status == "in_progress" or hunt.status == "finished" %}
 <div class="center">
 	{% for page in pages %}
-	<h2><a href="{% url 'page|show' pk=page.pk %}">Page {{ page.number }}</a></h2>
+	<h2>Page {{ page.number }}</h2>
 	{% endfor %}
 </div>
 
