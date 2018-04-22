@@ -51,7 +51,7 @@
 {% if hunt.status == "in_progress" or hunt.status == "finished" %}
 <div class="center">
 	{% for page in pages %}
-	<h2>Page {{ page.number }}</h2>
+	<h2><a href="{% url 'page|show' pk=page.pk %}">Page {{ page.number }}</a></h2>
 	{% endfor %}
 </div>
 

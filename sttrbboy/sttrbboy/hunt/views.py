@@ -69,6 +69,7 @@ class ShowItem(DetailView):
 		context = super(ShowItem, self).get_context_data(**kwargs)
 		
 		context['interested'] = self.object.interested_scavvies.all()
+		context['comments'] = self.object.comments.all()
 
 		return context
 
