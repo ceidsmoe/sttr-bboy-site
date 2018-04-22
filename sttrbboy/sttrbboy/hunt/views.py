@@ -20,25 +20,32 @@ from sttrbboy.hunt.models import *
 from sttrbboy.users.models import *
 from sttrbboy.hunt.forms import *
 
+
 # Create your views here.
 class ListHunts(ListView):
-	model = Hunt
-	template_name = 'hunt/list.html'
+        model = Hunt
+        template_name = 'hunt/list.html'
+
+
+class ShowList(ListView):
+        model = Item
+        template_name = 'hunt/show_list.html'
+
 
 class ShowHunt(DetailView):
-	model = Hunt
-	template_name = 'hunt/show.html'
+        model = Hunt
+        template_name = 'hunt/show.html'
 
-	def get_context_data(self, **kwargs):
-		context = super(ShowHunt, self).get_context_data(**kwargs)
-		if self.object.status in ('in_progress', 'finished'):
-			if self.object.items.count() > 0:
-				context['items'] = self.object.items.all()
+        def get_context_data(self, **kwargs):
+                context = super(ShowHunt, self).get_context_data(**kwargs)
+                if self.object.status in ('in_progress', 'finished'):
+                        if self.object.items.count() > 0:
+	                        context['items'] = self.object.items.all()
 
 			if self.object.pages.count() > 0:
 				context['pages'] = self.object.pages.all()
 
-				
+
 		if self.request.user.is_authenticated():
 			in_hunt = Scavvie.objects.filter(hunt=self.object, user=self.request.user).exists()
 			if in_hunt:
@@ -52,14 +59,14 @@ class ShowHunt(DetailView):
 
 
 class ShowPage(DetailView):
-	model = Page
-	template_name = 'hunt/show_page.html'
+        model = Page
+        template_name = 'hunt/show_page.html'
 
-	def get_context_data(self, **kwargs):
-		context = super(ShowPage, self).get_context_data(**kwargs)
-		context['items'] = self.object.items.all()
+        def get_context_data(self, **kwargs):
+                context = super(ShowPage, self).get_context_data(**kwargs)
+                context['items'] = self.object.items.all()
+                return context
 
-		return context
 
 class ShowItem(DetailView):
 	model = Item
@@ -67,7 +74,7 @@ class ShowItem(DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super(ShowItem, self).get_context_data(**kwargs)
-		
+
 		context['interested'] = self.object.interested_scavvies.all()
 		context['comments'] = self.object.comments.all()
 
