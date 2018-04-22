@@ -57,10 +57,18 @@ class ShowPage(DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super(ShowPage, self).get_context_data(**kwargs)
-		if self.object.items.count() > 0:
-			context['items'] = self.object.items.all()
-		else:
-			context['items'] = None
+		context['items'] = self.object.items.all()
+
+		return context
+
+class ShowItem(DetailView):
+	model = Item
+	template_name = 'hunt/show_item.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(ShowItem, self).get_context_data(**kwargs)
+		
+		context['interested'] = self.object.interested_scavvies.all()
 
 		return context
 

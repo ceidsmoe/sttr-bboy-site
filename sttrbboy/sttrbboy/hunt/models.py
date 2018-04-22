@@ -81,8 +81,9 @@ class Item(models.Model):
 	page = models.ForeignKey(Page, related_name='items')
 	hunt = models.ForeignKey(Hunt, related_name='items')
 	page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
-	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items')
-	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items')
+	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items', blank=True)
+	working_scavvies = models.ManyToManyField(Scavvie, related_name='working_items', blank=True)
+	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items', blank=True)
 
 	def __unicode__(self):
 		return "Item %d - %s" % (self.number, self.short_desc)
