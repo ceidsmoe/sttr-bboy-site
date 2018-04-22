@@ -88,6 +88,10 @@ class Item(models.Model):
 	def __unicode__(self):
 		return "Item %d - %s" % (self.number, self.short_desc)
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ('item|show', [self.pk])
+
 class Comment(models.Model):
 	text = models.CharField(max_length=512)
 	item = models.ForeignKey(Item, related_name='comments')

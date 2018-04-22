@@ -5,6 +5,11 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from sttrbboy.hunt.models import *
 
+class ItemForm(forms.ModelForm):
+	class Meta:
+		model = Item
+		fields = ('interested_scavvies', 'working_scavvies', 'completed_scavvies')
+
 class HuntRegistrationForm(forms.ModelForm):
 	class Meta:
 		model = Scavvie
@@ -13,3 +18,9 @@ class HuntRegistrationForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		self.hunt = kwargs.pop('hunt')
 		super(HuntRegistrationForm, self).__init__(*args, **kwargs)
+
+
+class ItemCommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ('text',)

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+	<h1>Page {{ page.number }}</h1>
+</div>
+
+{% for item in items %}
+<a href="{% url 'item|show' pk=item.pk %}"><h2>Item {{ item.number }}</h2></a>
+{% endfor %}
+
+{% endblock %}

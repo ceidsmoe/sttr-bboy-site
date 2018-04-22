@@ -61,18 +61,6 @@ class ShowPage(DetailView):
 
 		return context
 
-class ShowItem(DetailView):
-	model = Item
-	template_name = 'hunt/show_item.html'
-
-	def get_context_data(self, **kwargs):
-		context = super(ShowItem, self).get_context_data(**kwargs)
-		
-		context['interested'] = self.object.interested_scavvies.all()
-		context['comments'] = self.object.comments.all()
-
-		return context
-
 
 class RegisterForHunt(FormView):
 	form_class = HuntRegistrationForm
@@ -102,3 +90,46 @@ class RegisterForHunt(FormView):
 		kwargs = super(RegisterForHunt, self).get_form_kwargs()
 		kwargs['hunt'] = self.hunt
 		return kwargs
+
+class ShowItem(UpdateView):
+	form_class = ItemForm
+	model = Item
+	template_name = 'hunt/show_item.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(ShowItem, self).get_context_data(**kwargs)
+		context['interested'] = self.object.interested_scavvies.all()
+		context['comments'] = self.object.comments.all()
+
+		return context
+
+
+	@method_decorator(login_required)
+	def dispatch(self, request, *args, **kwargs):
+		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
+		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+		return super(ShowItem, self).dispatch(request, *args, **kwargs)
+
+	def form_valid(self, form):
+		item = form.save(commit=False)
+		item.save()
+		messages.success(self.request, "Item updated")
+		return HttpResponseRedirect(self.item.get_absolute_url())
+
+class MakeNewComment(FormView):
+	form_class = ItemCommentForm
+	template_name = "hunt/new_comment.html"
+
+	@method_decorator(login_required)
+	def dispatch(self, request, *args, **kwargs):
+		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
+		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+		return super(MakeNewComment, self).dispatch(request, *args, **kwargs)
+
+	def form_valid(self, form):
+		comment = form.save(commit=False)
+		comment.item = self.item
+		comment.scavvie = self.scavvie
+		comment.save()
+		messages.success(self.request, "Your comment on item %d has been posted!" % (self.item.number))
+		return HttpResponseRedirect(self.item.get_absolute_url())
