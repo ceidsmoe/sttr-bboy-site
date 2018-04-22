@@ -104,4 +104,4 @@ class Comment(models.Model):
 
 class ItemList(models.Model):
         title = models.CharField(max_length=512)
-        item = models.ForeignKey(Item, relate_name='')
+        item = models.ForeignKey(Item)

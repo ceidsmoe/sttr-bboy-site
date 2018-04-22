@@ -8,7 +8,29 @@
 <p>{{ item.full_desc }}</p>
 
 {% if user.is_authenticated %}
+<form class="form-horizontal" method="post">
+	{% csrf_token %}
+	<div class="form-group">
+		<div class="row">
+			<div class="col-lg-6">
+				Interested {{ form.interest }}
+			</div>
 
+			<div class="col-lg-6">
+				Working {{ form.work }}
+			</div>
+
+			<div class="col-lg-6">
+				Completed {{ form.complete }}
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-offset-2 col-lg-10">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</div>
+	</div>
+</form>
 {% endif %}
 
 {% for scavvie in interested %}

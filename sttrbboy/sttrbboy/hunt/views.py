@@ -117,20 +117,24 @@ class ShowItem(UpdateView):
 		context = super(ShowItem, self).get_context_data(**kwargs)
 		context['interested'] = self.object.interested_scavvies.all()
 		context['comments'] = self.object.comments.all()
-
 		return context
 
-
-	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
 		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
-		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
 		return super(ShowItem, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
-		item = form.save(commit=False)
-		item.save()
-		messages.success(self.request, "Item updated")
+		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+		if form.interested:
+			self.item.interested_scavvies.add(self.scavvie)
+		if form.working:
+			self.item.working_scavvies.add(self.scavvie)
+		if form.completed:
+			self.item.completed_scavvies.add(self.scavvie)
+			self.item.completed = True
+
+		self.item.save()
+		messages.success(self.request, "Item updated %s" % form.interested)
 		return HttpResponseRedirect(self.item.get_absolute_url())
 
 class MakeNewComment(FormView):
