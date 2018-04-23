@@ -49,13 +49,13 @@ class ShowHunt(DetailView):
 		context = super(ShowHunt, self).get_context_data(**kwargs)
 		if self.object.status in ('in_progress', 'finished'):
 			if self.object.items.count() > 0:
-				context['items'] = self.object.items.all()
+				number_done = sum([1 for i in self.object.items.all() if i.completed])
+				context['percentage_done'] = int(float(number_done) / self.object.items.count() * 100)
+			else:
+				context['percentage_done'] = 0
 
-			if self.object.pages.count() > 0:
-				context['pages'] = self.object.pages.all()
-
-			number_done = sum([1 for i in self.object.items.all() if i.completed])
-			context['percentage_done'] = float(number_done) / self.object.items.count() * 100
+			context['items'] = self.object.items.all()
+			context['pages'] = self.object.pages.all()
 
 
 		if self.request.user.is_authenticated():
@@ -65,7 +65,8 @@ class ShowHunt(DetailView):
 				context['scavvie'] = scavvie
 				if self.object.status in ('in_progress', 'finished'):
 					pass
-				return context
+		
+		return context
 
 
 class ShowPage(DetailView):
@@ -148,7 +149,7 @@ class ShowItem(UpdateView):
 				self.item.completed_scavvies.add(self.scavvie)
 			else:
 				self.item.completed_scavvies.remove(self.scavvie)
-				self.item.completed = not self.item.completed
+			self.item.completed = not self.item.completed
 
 		self.item.save()
 		messages.success(self.request, "Item updated")
