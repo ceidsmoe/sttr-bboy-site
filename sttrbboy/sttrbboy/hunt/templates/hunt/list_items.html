@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<img src="{{ STATIC_URL }}img/sttr-bboy-logo.png" alt="STTR-BBoy logo" class="img-responsive" style="display: blockl margin: auto;">
+
+{% for tag in tags %}
+<button class="btn btn-danger" onClick="hideAllByTag({{tag.title}})">
+{% endfor %}
+
+{% for item in object_list %}
+<div class="row">
+  <div class="col-md-6" id="{{ item.get_csv_tags }}">
+    <h1> "{{ itemnumber  }}"
+    </h1>
+    <div/>
+</div>
+{% endfor %}
+{% endblock %}
+{% block script %}
+  <script>
+    var hideAllByTag = function(tagName) {
+    var items = document.querySelectorAll("[id*='"+tagName+"']");
+    for(var i = 0; i < items.length; i++) { items[i].hide(); };
+		       };
+  </script>
+{% endblock %}
