@@ -21,8 +21,12 @@ class ItemAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'item', 'scavvie')
 
+class TagAdmin(admin.ModelAdmin):
+	list_display = ('__unicode__', 'title')
+
 admin.site.register(Hunt, HuntAdmin)
 admin.site.register(Scavvie, ScavvieAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Tag, TagAdmin)

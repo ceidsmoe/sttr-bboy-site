@@ -73,6 +73,9 @@ class Page(models.Model):
 class Tag(models.Model):
         title = models.CharField(max_length=512)
 
+        def __unicode__(self):
+        	return self.title
+
 
 class Item(models.Model):
         class Meta:
@@ -97,7 +100,7 @@ class Item(models.Model):
                 return "Item %d - %s" % (self.number, self.short_desc)
 
         def get_csv_tags(self):
-                return ','.join([it.title for it in self.object.tags.all()])
+                return ','.join([it.title for it in self.tags.all()])
 
 
 	@models.permalink
