@@ -70,6 +70,10 @@ class Page(models.Model):
                 return "Page %d" % self.number
 
 
+class Tag(models.Model):
+        title = models.CharField(max_length=512)
+
+
 class Item(models.Model):
         class Meta:
                 unique_together = ('number', 'hunt')
@@ -81,6 +85,7 @@ class Item(models.Model):
         completed = models.BooleanField(default=False)
         started = models.BooleanField(default=False)
 
+        tags = models.ManyToManyField(Tag, related_name='items')
         page = models.ForeignKey(Page, related_name='items')
         hunt = models.ForeignKey(Hunt, related_name='items')
         page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')

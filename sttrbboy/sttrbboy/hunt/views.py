@@ -40,22 +40,22 @@ class ShowHunt(DetailView):
                 context = super(ShowHunt, self).get_context_data(**kwargs)
                 if self.object.status in ('in_progress', 'finished'):
                         if self.object.items.count() > 0:
-	                        context['items'] = self.object.items.all()
+                                context['items'] = self.object.items.all()
 
-			if self.object.pages.count() > 0:
-				context['pages'] = self.object.pages.all()
+                        if self.object.pages.count() > 0:
+                                context['pages'] = self.object.pages.all()
 
 
-		if self.request.user.is_authenticated():
+                if self.request.user.is_authenticated():
 			in_hunt = Scavvie.objects.filter(hunt=self.object, user=self.request.user).exists()
-			if in_hunt:
-				scavvie = Scavvie.objects.get(hunt=self.object, user=self.request.user)
-				context['scavvie'] = scavvie
+                        if in_hunt:
+                                scavvie = Scavvie.objects.get(hunt=self.object, user=self.request.user)
+                                context['scavvie'] = scavvie
 
 
-				if self.object.status in ('in_progress', 'finished'):
-					pass
-		return context
+                                if self.object.status in ('in_progress', 'finished'):
+                                        pass
+                                return context
 
 
 class ShowPage(DetailView):
@@ -66,36 +66,38 @@ class ShowPage(DetailView):
                 context = super(ShowPage, self).get_context_data(**kwargs)
                 context['items'] = self.object.items.all()
                 return context
-
-
+              
+              
 class RegisterForHunt(FormView):
-	form_class = HuntRegistrationForm
-	template_name = "hunt/register.html"
+        form_class = HuntRegistrationForm
+        template_name = "hunt/register.html"
 
-	@method_decorator(login_required)
-	def dispatch(self, request, *args, **kwargs):
-		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
-		if Scavvie.objects.filter(hunt=self.hunt, user=request.user).exists():
-			return HttpResponseRedirect(self.hunt.get_absolute_url())
-		return super(RegisterForHunt, self).dispatch(request, *args, **kwargs)
+        @method_decorator(login_required)
+        def dispatch(self, request, *args, **kwargs):
+                self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
+                if Scavvie.objects.filter(hunt=self.hunt, user=request.user).exists():
+                        return HttpResponseRedirect(self.hunt.get_absolute_url())
+                return super(RegisterForHunt, self).dispatch(request, *args, **kwargs)
 
-	def form_valid(self, form):
-		scavvie = form.save(commit=False)
-		scavvie.user = self.request.user
-		scavvie.hunt = self.hunt
-		scavvie.save()
-		messages.success(self.request, "You are now registered for the %d Scav Hunt!" % (self.hunt.year))
-		return HttpResponseRedirect(self.hunt.get_absolute_url())
+        def form_valid(self, form):
+                scavvie = form.save(commit=False)
+                scavvie.user = self.request.user
+                scavvie.hunt = self.hunt
+                scavvie.save()
+                messages.success(self.request, "You are now registered for the %d Scav Hunt!" % (self.hunt.year))
+                return HttpResponseRedirect(self.hunt.get_absolute_url())
 
-	def get_context_data(self, **kwargs):
-		context = super(RegisterForHunt, self).get_context_data(**kwargs)
-		context['hunt'] = self.hunt
-		return context
+        def get_context_data(self, **kwargs):
+                context = super(RegisterForHunt, self).get_context_data(**kwargs)
+                context['hunt'] = self.hunt
+                return context
 
-	def get_form_kwargs(self):
-		kwargs = super(RegisterForHunt, self).get_form_kwargs()
-		kwargs['hunt'] = self.hunt
-		return kwargs
+        def get_form_kwargs(self):
+                kwargs = super(RegisterForHunt, self).get_form_kwargs()
+                kwargs['hunt'] = self.hunt
+                return kwargs
+
+
 
 class ShowItem(UpdateView):
 	form_class = ItemForm
@@ -142,20 +144,31 @@ class ShowItem(UpdateView):
 		messages.success(self.request, "Item updated")
 		return HttpResponseRedirect(self.item.get_absolute_url())
 
+
 class MakeNewComment(FormView):
-	form_class = ItemCommentForm
-	template_name = "hunt/new_comment.html"
+        form_class = ItemCommentForm
+        template_name = "hunt/new_comment.html"
 
-	@method_decorator(login_required)
-	def dispatch(self, request, *args, **kwargs):
-		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
-		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
-		return super(MakeNewComment, self).dispatch(request, *args, **kwargs)
+        @method_decorator(login_required)
+        def dispatch(self, request, *args, **kwargs):
+                self.item = get_object_or_404(Item, id=self.kwargs['pk'])
+                self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+                return super(MakeNewComment, self).dispatch(request, *args, **kwargs)
 
-	def form_valid(self, form):
-		comment = form.save(commit=False)
-		comment.item = self.item
-		comment.scavvie = self.scavvie
-		comment.save()
-		messages.success(self.request, "Your comment on item %d has been posted!" % (self.item.number))
-		return HttpResponseRedirect(self.item.get_absolute_url())
+        def form_valid(self, form):
+                comment = form.save(commit=False)
+                comment.item = self.item
+                comment.scavvie = self.scavvie
+                comment.save()
+                messages.success(self.request, "Your comment on item %d has been posted!" % (self.item.number))
+                return HttpResponseRedirect(self.item.get_absolute_url())
+
+
+class ShowItems(ListView):
+        template_name = "hunt/list_items"
+        model = Item
+
+        def get_context_data(self, **kwargs):
+                context = super(ShowItems, self).get_context_data(**kwargs)
+                context['tags'] = [it.title for it in items.objects.select_related('tag')]
+                return context

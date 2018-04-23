@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^hunt/(?P<pk>[0-9]+)/register/$', RegisterForHunt.as_view(), name='hunt|register'),
     url(r'^page/(?P<pk>[0-9]+)/$', ShowPage.as_view(), name='page|show'),
     url(r'^item/(?P<pk>[0-9]+)/$', ShowItem.as_view(), name='item|show'),
-    url(r'^item/(?P<pk>[0-9]+)/newcomment$', MakeNewComment.as_view(), name="new|comment")
+    url(r'^item/(?P<pk>[0-9]+)/newcomment$', MakeNewComment.as_view(), name="new|comment"),
+    url(r'item/(?P<pk>[0-9]+)/$', ShowPage.as_view(), name="hunt|list_items")
 ]
