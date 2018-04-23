@@ -4,8 +4,6 @@
 	<h1>{{ hunt.name }}</h1>
 </div>
 
-
-
 <div class="row">
 	<div class="col-lg-4">
 		<h2>Important Dates</h2>
@@ -27,31 +25,28 @@
 		<h4 class="text-warning">Future hunt</h4>
 		{% endif %}
 		{% if not scavvie %}
-		<p><a class="btn btn-primary" href="{% url 'hunt|register' pk=hunt.pk %}">Register</a></p>
+		<p><a class="btn btn-primary" href="">Register</a></p>
 		{% endif %}
 	</div>
 	<div class="col-lg-4">
-		<h2>Items</h2>
+		<h2>View All Items</h2>
 	</div>
 </div>
 
-{% if scavvie %}
-<hr>
 <div class="row">
-	<div class="col-lg-4">
-		<h2>My Info</h2>
-		<dl class="dl-horizontal">
-			<dt>Your items</dt>
-			<dd>{{ scavvie.name }}</dd>
-		</dl>
+	<div class="progress">
+		<div class="progress-bar" role="progressbar" aria-valuenow="{{ percentage_done }}" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
+			{{ percentage_done }}%
+		</div>
 	</div>
 </div>
-{% endif %}
 
 {% if hunt.status == "in_progress" or hunt.status == "finished" %}
-<div class="center">
+<div class="row">
 	{% for page in pages %}
-	<h2><a href="{% url 'page|show' pk=page.pk %}">Page {{ page.number }}</a></h2>
+	<div class="col-lg-2">
+		<h2><a href="{% url 'page|show' pk=page.pk %}">Page {{ page.number }}</a></h2>
+	</div>
 	{% endfor %}
 </div>
 
