@@ -66,8 +66,8 @@ class ShowPage(DetailView):
                 context = super(ShowPage, self).get_context_data(**kwargs)
                 context['items'] = self.object.items.all()
                 return context
-
-
+              
+              
 class RegisterForHunt(FormView):
         form_class = HuntRegistrationForm
         template_name = "hunt/register.html"
@@ -98,34 +98,51 @@ class RegisterForHunt(FormView):
                 return kwargs
 
 
+
 class ShowItem(UpdateView):
-        form_class = ItemForm
-        model = Item
-        template_name = 'hunt/show_item.html'
+	form_class = ItemForm
+	model = Item
+	template_name = 'hunt/show_item.html'
 
-        def get_context_data(self, **kwargs):
-                context = super(ShowItem, self).get_context_data(**kwargs)
-                context['interested'] = self.object.interested_scavvies.all()
-                context['comments'] = self.object.comments.all()
-                return context
+	def get_context_data(self, **kwargs):
+		context = super(ShowItem, self).get_context_data(**kwargs)
+		context['interested_scavvies'] = self.object.interested_scavvies.all()
+		context['comments'] = self.object.comments.all()
+		context['item_interested'] = self.scavvie in context['interested_scavvies']
+		context['item_working'] = self.scavvie in self.object.working_scavvies.all()
+		context['item_complete'] = self.object.completed
+		return context
 
-        def dispatch(self, request, *args, **kwargs):
-                self.item = get_object_or_404(Item, id=self.kwargs['pk'])
-                return super(ShowItem, self).dispatch(request, *args, **kwargs)
+	def dispatch(self, request, *args, **kwargs):
+		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
+		if Scavvie.objects.filter(hunt=self.item.hunt, user=request.user).exists():
+			self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+		else:
+			self.scavvie = None
+		return super(ShowItem, self).dispatch(request, *args, **kwargs)
 
-        def form_valid(self, form):
-                self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
-                if form.interested:
-                        self.item.interested_scavvies.add(self.scavvie)
-                if form.working:
-                        self.item.working_scavvies.add(self.scavvie)
-                if form.completed:
-                        self.item.completed_scavvies.add(self.scavvie)
-                        self.item.completed = True
+	def form_valid(self, form):
+		if form.interested:
+			if self.scavvie in self.object.interested_scavvies.all():
+				self.item.interested_scavvies.remove(self.scavvie)
+			else:
+				self.item.interested_scavvies.add(self.scavvie)
+		if form.working:
+			if self.scavvie in self.object.working_scavvies.all():
+				self.item.working_scavvies.remove(self.scavvie)
+			else:
+				self.item.working_scavvies.add(self.scavvie)
+			self.item.started = True
+		if form.completed:
+			if not self.item.completed:
+				self.item.completed_scavvies.add(self.scavvie)
+			else:
+				self.item.completed_scavvies.remove(self.scavvie)
+			self.item.completed = not self.item.completed 
 
-                self.item.save()
-                messages.success(self.request, "Item updated %s" % form.interested)
-                return HttpResponseRedirect(self.item.get_absolute_url())
+		self.item.save()
+		messages.success(self.request, "Item updated")
+		return HttpResponseRedirect(self.item.get_absolute_url())
 
 
 class MakeNewComment(FormView):

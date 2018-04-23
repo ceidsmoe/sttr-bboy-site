@@ -11,13 +11,13 @@
 <form class="form-horizontal" method="post">
 	{% csrf_token %}
 	<div class="form-group">
-		<div class="row">
+		<div style="display:none">
 			<div class="col-lg-6">
-				Interested {{ form.interest }}
+				{{ form.interest }}
 			</div>
 
 			<div class="col-lg-6">
-				Working {{ form.work }}
+				{{ form.work }}
 			</div>
 
 			<div class="col-lg-6">
@@ -26,8 +26,26 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-lg-offset-2 col-lg-10">
-			<button type="submit" class="btn btn-primary">Submit</button>
+		<div class="col-lg-10">
+			{% if item_interested %}
+			<button type="submit" onclick="$('#id_interest')[0].checked = true" class="btn btn-danger">Uninterested</button>
+			{% else %}
+			<button type="submit" onclick="$('#id_interest')[0].checked = true" class="btn btn-success">Interested</button>
+			{% endif %}
+		</div>
+		<div class="col-lg-10">
+			{% if item_working %}
+			<button type="submit" onclick="$('#id_work')[0].checked = true" class="btn btn-danger">No longer working on</button>
+			{% else %}
+			<button type="submit" onclick="$('#id_work')[0].checked = true" class="btn btn-success">Working on</button>
+			{% endif %}
+		</div>
+		<div class="col-lg-10">
+			{% if item_complete %}
+			<button type="submit" onclick="$('#id_complete')[0].checked = true" class="btn btn-danger">Mark Incomplete</button>
+			{% else %}
+			<button type="submit" onclick="$('#id_complete')[0].checked = true" class="btn btn-success">Mark Complete</button>
+			{% endif %}
 		</div>
 	</div>
 </form>
