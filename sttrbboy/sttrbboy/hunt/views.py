@@ -66,8 +66,8 @@ class ShowPage(DetailView):
                 context = super(ShowPage, self).get_context_data(**kwargs)
                 context['items'] = self.object.items.all()
                 return context
-              
-              
+
+
 class RegisterForHunt(FormView):
         form_class = HuntRegistrationForm
         template_name = "hunt/register.html"
@@ -138,7 +138,7 @@ class ShowItem(UpdateView):
 				self.item.completed_scavvies.add(self.scavvie)
 			else:
 				self.item.completed_scavvies.remove(self.scavvie)
-			self.item.completed = not self.item.completed 
+			self.item.completed = not self.item.completed
 
 		self.item.save()
 		messages.success(self.request, "Item updated")
@@ -165,10 +165,10 @@ class MakeNewComment(FormView):
 
 
 class ShowItems(ListView):
-        template_name = "hunt/list_items"
+        template_name = "hunt/list_items.html"
         model = Item
 
         def get_context_data(self, **kwargs):
                 context = super(ShowItems, self).get_context_data(**kwargs)
-                context['tags'] = [it.title for it in items.objects.select_related('tag')]
+                context['tags'] = [it.title for it in Tag.objects.all()]
                 return context

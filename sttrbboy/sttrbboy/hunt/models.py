@@ -96,6 +96,9 @@ class Item(models.Model):
         def __unicode__(self):
                 return "Item %d - %s" % (self.number, self.short_desc)
 
+        def get_csv_tags(self):
+                return ','.join([it.title for it in self.object.tags.all()])
+
 
 	@models.permalink
 	def get_absolute_url(self):
