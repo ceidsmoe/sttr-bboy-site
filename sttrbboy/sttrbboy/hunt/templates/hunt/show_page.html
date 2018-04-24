@@ -5,7 +5,9 @@
 </div>
 
 {% for item in items %}
-<a href="{% url 'item|show' pk=item.pk %}"><h2>Item {{ item.number }}</h2></a>
+<div class="col-lg-2">
+	<a href="{% url 'item|show' pk=item.pk %}"><h2>Item {{ item.number }}</h2></a>
+</div>
 {% endfor %}
 
 {% endblock %}

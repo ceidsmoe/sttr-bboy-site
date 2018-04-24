@@ -1,16 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<br>
 <button class="btn btn-danger" onClick="hideAllByTag('id_tags')">Show All</button>
 
 {% for tag in tags %}
 <button class="btn btn-danger" onClick="hideAllByTag('{{ tag.title }}')">{{ tag.title }}</button>
 {% endfor %}
 
+<br><br>
+
+<button class="btn btn-danger" onClick="hideAllByTag('unclaimed')">Unclaimed</button>
+<button class="btn btn-danger" onClick="hideAllByTag('started')">Started</button>
+<button class="btn btn-danger" onClick="hideAllByTag('completed')">Completed</button>
+
+<br><br>
+
 {% for item in object_list %}
 <div class="row">
-  <div class="col-md-6" id="{{ item.get_csv_tags }}">
-    <h1> Item {{ item.number  }}</h1>
+  <div class="col-md-2" id="{{ item.get_csv_tags }}">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><a href="{% url 'item|show' pk=item.pk %}">Item {{ item.number  }}</a>
+        {% if item.completed %}
+        <span class="label label-success">Done</span>
+        {% elif item.started %}
+        <span class="label label-warning">In Progress</span>
+        {% else %}
+        <span class="label label-danger">Unclaimed</span>
+        {% endif %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{ item.short_desc }}
+    </div>
+  </div>
   </div>
 </div>
 {% endfor %}

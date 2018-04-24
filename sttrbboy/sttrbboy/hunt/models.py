@@ -12,96 +12,101 @@ from sttrbboy import settings
 
 
 def gen_list_filename(instance, fn):
-        return "lists/%d%s" % (instance.year, os.path.splitext(fn)[1])
+	return "lists/%d%s" % (instance.year, os.path.splitext(fn)[1])
 
 
 # Create your models here.
 class Hunt(models.Model):
-        year = models.IntegerField()
-        start_date = models.DateTimeField()
-        end_date = models.DateTimeField()
-        list_pdf = models.FileField(upload_to=gen_list_filename, storage=OverwriteFileSystemStorage(), blank=True)
+	year = models.IntegerField()
+	start_date = models.DateTimeField()
+	end_date = models.DateTimeField()
+	list_pdf = models.FileField(upload_to=gen_list_filename, storage=OverwriteFileSystemStorage(), blank=True)
 
-        def __unicode__(self):
-                return str(self.year)
+	def __unicode__(self):
+		return str(self.year)
 
-        @property
-        def status(self):
-                if self.start_date and self.end_date:
-                        now = timezone.now()
-                        if self.start_date < now < self.end_date:
-                                return 'in_progress'
-                        elif now > self.end_date:
-                                return 'finished'
-                        else:
-                                return 'future'
-	        else:
-                        return 'N/A'
+	@property
+	def status(self):
+		if self.start_date and self.end_date:
+			now = timezone.now()
+			if self.start_date < now < self.end_date:
+				return 'in_progress'
+			elif now > self.end_date:
+				return 'finished'
+			else:
+				return 'future'
+		else:
+			return 'N/A'
 
-        def get_scavvies(self):
-                self.scavvies.all()
+	def get_scavvies(self):
+		return self.scavvies.all()
 
-        @models.permalink
-        def get_absolute_url(self):
-                return ('hunt|show', [self.pk])
+	@models.permalink
+	def get_absolute_url(self):
+		return ('hunt|show', [self.pk])
 
 
 class Scavvie(models.Model):
-        class Meta:
-                unique_together = ('user', 'hunt')
+	class Meta:
+		unique_together = ('user', 'hunt')
 
-        page_captain = models.BooleanField(default=False)
-        captain = models.BooleanField(default=False)
-        hunt = models.ForeignKey(Hunt, related_name='scavvies')
-        user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
+	page_captain = models.BooleanField(default=False)
+	captain = models.BooleanField(default=False)
+	hunt = models.ForeignKey(Hunt, related_name='scavvies')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
 
-        def __unicode__(self):
-                return self.user.profile.name
+	def __unicode__(self):
+		return self.user.profile.name
 
 
 class Page(models.Model):
-        class Meta:
-                unique_together = ('number', 'hunt')
+	class Meta:
+		unique_together = ('number', 'hunt')
 
-        number = models.IntegerField()
-        hunt = models.ForeignKey(Hunt, related_name='pages')
-        page_captain = models.ForeignKey(Scavvie, related_name='pages')
+	number = models.IntegerField()
+	hunt = models.ForeignKey(Hunt, related_name='pages')
+	page_captain = models.ForeignKey(Scavvie, related_name='pages')
 
-        def __unicode__(self):
-                return "Page %d" % self.number
+	def __unicode__(self):
+		return "Page %d" % self.number
 
 
 class Tag(models.Model):
-        title = models.CharField(max_length=512)
+	title = models.CharField(max_length=512)
 
-        def __unicode__(self):
-        	return self.title
+	def __unicode__(self):
+		return self.title
 
 
 class Item(models.Model):
-        class Meta:
-                unique_together = ('number', 'hunt')
+	class Meta:
+		unique_together = ('number', 'hunt')
 
-        number = models.IntegerField()
-        points = models.DecimalField(max_digits=8, decimal_places=5)
-        short_desc = models.CharField(max_length=128)
-        full_desc = models.TextField(blank=True)
-        completed = models.BooleanField(default=False)
-        started = models.BooleanField(default=False)
+	number = models.IntegerField()
+	points = models.DecimalField(max_digits=8, decimal_places=5)
+	short_desc = models.CharField(max_length=128)
+	full_desc = models.TextField(blank=True)
+	completed = models.BooleanField(default=False)
+	started = models.BooleanField(default=False)
 
-        tags = models.ManyToManyField(Tag, related_name='items')
-        page = models.ForeignKey(Page, related_name='items')
-        hunt = models.ForeignKey(Hunt, related_name='items')
-        page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
-        interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items', blank=True)
-        working_scavvies = models.ManyToManyField(Scavvie, related_name='working_items', blank=True)
-        completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items', blank=True)
+	tags = models.ManyToManyField(Tag, related_name='items')
+	page = models.ForeignKey(Page, related_name='items')
+	hunt = models.ForeignKey(Hunt, related_name='items')
+	page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
+	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items', blank=True)
+	working_scavvies = models.ManyToManyField(Scavvie, related_name='working_items', blank=True)
+	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items', blank=True)
 
-        def __unicode__(self):
-                return "Item %d - %s" % (self.number, self.short_desc)
+	def __unicode__(self):
+		return "Item %d - %s" % (self.number, self.short_desc)
 
-        def get_csv_tags(self):
-                return 'id_tags:' + ','.join([it.title for it in self.tags.all()])
+	def get_csv_tags(self):
+		status = "unclaimed"
+		if self.started:
+			status = "started"
+		elif self.completed:
+			status = "completed"
+		return 'id_tags:' + ','.join([it.title for it in self.tags.all()]) + "," + status
 
 
 	@models.permalink
@@ -109,19 +114,19 @@ class Item(models.Model):
 		return ('item|show', [self.pk])
 
 class Comment(models.Model):
-        text = models.CharField(max_length=512)
-        item = models.ForeignKey(Item, related_name='comments')
-        scavvie = models.ForeignKey(Scavvie, related_name='comments')
+	text = models.CharField(max_length=512)
+	item = models.ForeignKey(Item, related_name='comments')
+	scavvie = models.ForeignKey(Scavvie, related_name='comments')
 
 
 class ItemList(models.Model):
-        title = models.CharField(max_length=512)
-        item = models.ForeignKey(Item)
+	title = models.CharField(max_length=512)
+	item = models.ForeignKey(Item)
 
 
 def get_or_create_scavvie(sender, **kwargs):
-        if not kwargs.get('raw'):
-                for hunt in Hunt.objects.all():
-                        scavvie, created = Scavvie.objects.get_or_create(user=kwargs['instance'], hunt=hunt)
+	if not kwargs.get('raw'):
+		for hunt in Hunt.objects.all():
+			scavvie, created = Scavvie.objects.get_or_create(user=kwargs['instance'], hunt=hunt)
 
 models.signals.post_save.connect(get_or_create_scavvie, sender=User)
