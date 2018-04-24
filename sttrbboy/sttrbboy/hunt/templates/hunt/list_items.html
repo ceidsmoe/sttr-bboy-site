@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<img src="{{ STATIC_URL }}img/sttr-bboy-logo.png" alt="STTR-BBoy logo" class="img-responsive" style="display: blockl margin: auto;">
+<button class="btn btn-danger" onClick="hideAllByTag('id_tags')">Show All</button>
 
 {% for tag in tags %}
-<button class="btn btn-danger" onClick="hideAllByTag({{ tag.title }})">{{ tag.title }}</button>
+<button class="btn btn-danger" onClick="hideAllByTag('{{ tag.title }}')">{{ tag.title }}</button>
 {% endfor %}
 
 {% for item in object_list %}
@@ -17,17 +17,25 @@
 {% endblock %}
 {% block script %}
   <script>
-    var shown = true;
     var hideAllByTag = function(tagName) {
-      items = document.querySelectorAll("[id*='"+tagName.id+"']");
+      allItems = nodeListToArr(document.querySelectorAll("[id^='id_tags']"));
+      items = nodeListToArr(document.querySelectorAll("[id*='"+tagName+"']"));
+      
+      diff = allItems.filter(x => items.indexOf(x) < 0);
+
       for (i = 0; i < items.length; i++) {
-          if (shown) {
-            $(items[i]).hide();
-          } else {
-            $(items[i]).show();
-          }
+        $(items[i]).show();
       }
-      shown = !shown;
+
+      for (i = 0; i < diff.length; i++) {
+        $(diff[i]).hide();
+      }
 		};
+
+    var nodeListToArr = function(nl) {
+      var arr = [];
+      for(var i = 0, n; n = nl[i]; ++i) arr.push(n);
+      return arr;
+    }
   </script>
 {% endblock %}

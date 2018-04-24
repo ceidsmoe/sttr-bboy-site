@@ -101,7 +101,7 @@ class Item(models.Model):
                 return "Item %d - %s" % (self.number, self.short_desc)
 
         def get_csv_tags(self):
-                return ','.join([it.title for it in self.tags.all()])
+                return 'id_tags:' + ','.join([it.title for it in self.tags.all()])
 
 
 	@models.permalink
