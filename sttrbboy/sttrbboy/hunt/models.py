@@ -118,10 +118,8 @@ class Comment(models.Model):
 	item = models.ForeignKey(Item, related_name='comments')
 	scavvie = models.ForeignKey(Scavvie, related_name='comments')
 
-
-class ItemList(models.Model):
-	title = models.CharField(max_length=512)
-	item = models.ForeignKey(Item)
+	def __unicode__(self):
+		return self.scavvie.user.profile.name + " " + self.text
 
 
 def get_or_create_scavvie(sender, **kwargs):
