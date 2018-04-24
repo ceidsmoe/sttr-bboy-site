@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import *
 from django.conf import settings
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.contrib import messages
 from django.http import *
@@ -79,37 +80,6 @@ class ShowPage(DetailView):
 		return context
 
 
-class RegisterForHunt(FormView):
-	form_class = HuntRegistrationForm
-	template_name = "hunt/register.html"
-
-	@method_decorator(login_required)
-	def dispatch(self, request, *args, **kwargs):
-		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
-		if Scavvie.objects.filter(hunt=self.hunt, user=request.user).exists():
-			return HttpResponseRedirect(self.hunt.get_absolute_url())
-		return super(RegisterForHunt, self).dispatch(request, *args, **kwargs)
-
-	def form_valid(self, form):
-		scavvie = form.save(commit=False)
-		scavvie.user = self.request.user
-		scavvie.hunt = self.hunt
-		scavvie.save()
-		messages.success(self.request, "You are now registered for the %d Scav Hunt!" % (self.hunt.year))
-		return HttpResponseRedirect(self.hunt.get_absolute_url())
-
-	def get_context_data(self, **kwargs):
-		context = super(RegisterForHunt, self).get_context_data(**kwargs)
-		context['hunt'] = self.hunt
-		return context
-
-	def get_form_kwargs(self):
-		kwargs = super(RegisterForHunt, self).get_form_kwargs()
-		kwargs['hunt'] = self.hunt
-		return kwargs
-
-
-
 class ShowItem(UpdateView):
 	form_class = ItemForm
 	model = Item
@@ -175,11 +145,31 @@ class MakeNewComment(FormView):
 		return HttpResponseRedirect(self.item.get_absolute_url())
 
 
-class ShowItems(ListView):
+class ShowItems(DetailView):
 	template_name = "hunt/list_items.html"
 	model = Item
+
+	def dispatch(self, request, *args, **kwargs):
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
+		return super(ShowItems, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, **kwargs):
 		context = super(ShowItems, self).get_context_data(**kwargs)
 		context['tags'] = [it.title for it in Tag.objects.all()]
+		context['items'] = Item.objects.filter(hunt=self.hunt)
+		return context
+
+class ShowMyItems(DetailView):
+	template_name = "hunt/list_my_items.html"
+	model = Item
+
+	@method_decorator(login_required)
+	def dispatch(self, request, *args, **kwargs):
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
+		self.scavvie = get_object_or_404(Scavvie, user=request.user)
+		return super(ShowMyItems, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, **kwargs):
+		context = super(ShowMyItems, self).get_context_data(**kwargs)
+		context['items'] = Item.objects.filter(Q(hunt=self.hunt), Q(interested_scavvies=self.scavvie) | Q(working_scavvies=self.scavvie) | Q(completed_scavvies=self.scavvie) | Q(page_captain=self.scavvie))
 		return context

@@ -5,16 +5,14 @@
 </div>
 
 <div class="row">
-	<div class="col-lg-4">
+	<div class="col-lg-3">
 		<h2>Important Dates</h2>
-		<dl class="dl-horizontal">
-			<dt>Hunt starts</dt>
-			<dd>{{ hunt.start_date }}</dd>
-			<dt>Hunt ends</dt>
-			<dd>{{ hunt.end_date }}</dd>
-		</dl>
+		<b>Hunt starts</b>
+		<p>{{ hunt.start_date }}</p>
+		<b>Hunt ends</b>
+		<p>{{ hunt.end_date }}</p>
 	</div>
-	<div class="col-lg-4">
+	<div class="col-lg-3">
 		<h2>Hunt Status</h2>
 		{% if hunt.status == "in_progress" %}
 		<h4 class="text-success">LIVE</h4>
@@ -25,8 +23,11 @@
 		<h4 class="text-warning">Future hunt</h4>
 		{% endif %}
 	</div>
-	<div class="col-lg-4">
-		<h2><a href="{% url 'hunt|list_items' %}">View All Items</a></h2>
+	<div class="col-lg-3">
+		<h2><a href="{% url 'hunt|list_items' pk=hunt.pk %}">View All Items</a></h2>
+	</div>
+	<div class="col-lg-3">
+		<h2><a href="{% url 'hunt|list_my_items' pk=hunt.pk %}">View My Items</a></h2>
 	</div>
 </div>
 

@@ -21,24 +21,6 @@ class ItemForm(forms.Form):
 		self.completed = data.get('complete', '')
 		return data
 
-class ItemForm2(forms.Form):
-	class Meta:
-		model = Item
-		fields = ('interested_scavvies',)
-
-	def __init__(self, *args, **kwargs):
-		del kwargs['instance']
-		super(ItemForm2, self).__init__(*args, **kwargs)
-
-class HuntRegistrationForm(forms.ModelForm):
-	class Meta:
-		model = Scavvie
-		fields = ('page_captain',)
-
-	def __init__(self, *args, **kwargs):
-		self.hunt = kwargs.pop('hunt')
-		super(HuntRegistrationForm, self).__init__(*args, **kwargs)
-
 
 class ItemCommentForm(forms.ModelForm):
 	class Meta:
