@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="page-header">
 	<h1>{{ hunt.name }}</h1>
@@ -7,21 +8,13 @@
 <div class="row">
 	<div class="col-lg-3">
 		<h2>Important Dates</h2>
-		<b>Hunt starts</b>
+		<b>Scav starts</b>
 		<p>{{ hunt.start_date }}</p>
-		<b>Hunt ends</b>
+		<b>Scav ends</b>
 		<p>{{ hunt.end_date }}</p>
 	</div>
 	<div class="col-lg-3">
-		<h2>Hunt Status</h2>
-		{% if hunt.status == "in_progress" %}
-		<h4 class="text-success">LIVE</h4>
-		<p><b>{{ hunt.end_date|timeuntil }}</b> until it all ends.</p>
-		{% elif hunt.status == "finished" %}
-		<h4 class="text-info">Finished</h4>
-		{% elif hunt.status == "future" %}
-		<h4 class="text-warning">Future hunt</h4>
-		{% endif %}
+		<a href="{{ hunt.list_pdf.url }}"><h2>The List</h2></a>
 	</div>
 	<div class="col-lg-3">
 		<h2><a href="{% url 'hunt|list_items' pk=hunt.pk %}">View All Items</a></h2>

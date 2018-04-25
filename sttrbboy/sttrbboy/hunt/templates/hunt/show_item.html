@@ -67,7 +67,7 @@
 	{% for comment in comments %}
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title">{{ comment.scavvie }}</h3>
+			<h3 class="panel-title">{{ comment.scavvie }} (pronouns: {{ comment.scavvie.user.profile.gender_pronouns }})</h3>
 		</div>
 		<div class="panel-body">
 			{{ comment.text }}

@@ -10,6 +10,7 @@ from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.utils.decorators import method_decorator
 from sttrbboy.users import forms
 from sttrbboy.users.models import Profile
+from sttrbboy.hunt.models import *
 from datetime import timedelta
 from django.http import HttpResponseRedirect
 
@@ -42,7 +43,10 @@ class ContactPage(TemplateView):
     template_name = "users/contact.html"
 
     def get_context_data(self, **kwargs):
-        return super(ContactPage, self).get_context_data(**kwargs)
+        context = super(ContactPage, self).get_context_data(**kwargs)
+        hunt = Hunt.objects.all()[Hunt.objects.all().count()-1]
+        context['captains'] = Scavvie.objects.filter(hunt=hunt, captain=True)
+        return context
 
 
 class ResetPassword(FormView):
