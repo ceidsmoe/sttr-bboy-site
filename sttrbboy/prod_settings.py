@@ -2,12 +2,12 @@ from local_settings import *
 
 DEBUG = False 
 
-ALLOWED_HOSTS = ['www.sttrbboy.us']
+ALLOWED_HOSTS = ['www.sttr-bboy.us']
 
 ADMINS = (
-    ('Administrator', 'admin@sttrbboy.us'),
+    ('Administrator', 'admin@sttr-bboy.us'),
 )
-SERVER_EMAIL = 'noreply@sttrbboy.us'
+SERVER_EMAIL = 'noreply@sttr-bboy.us'
 
 # Database
 DATABASES = {
