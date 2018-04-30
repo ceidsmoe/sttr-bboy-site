@@ -37,11 +37,6 @@ class ListHunts(ListView):
 		return super(ListHunts, self).dispatch(request, *args, **kwargs)
 
 
-class ShowList(ListView):
-	model = Item
-	template_name = 'hunt/show_list.html'
-
-
 class ShowHunt(DetailView):
 	model = Hunt
 	template_name = 'hunt/show.html'
@@ -145,7 +140,7 @@ class MakeNewComment(FormView):
 		return HttpResponseRedirect(self.item.get_absolute_url())
 
 
-class ShowItems(DetailView):
+class ShowItems(ListView):
 	template_name = "hunt/list_items.html"
 	model = Item
 
@@ -159,7 +154,7 @@ class ShowItems(DetailView):
 		context['items'] = Item.objects.filter(hunt=self.hunt)
 		return context
 
-class ShowMyItems(DetailView):
+class ShowMyItems(ListView):
 	template_name = "hunt/list_my_items.html"
 	model = Item
 

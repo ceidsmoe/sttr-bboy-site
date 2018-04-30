@@ -13,9 +13,11 @@
 		<b>Scav ends</b>
 		<p>{{ hunt.end_date }}</p>
 	</div>
+	{% if hunt.list_pdf %}
 	<div class="col-lg-3">
 		<a href="{{ hunt.list_pdf.url }}"><h2>The List</h2></a>
 	</div>
+	{% endif %}
 	<div class="col-lg-3">
 		<h2><a href="{% url 'hunt|list_items' pk=hunt.pk %}">View All Items</a></h2>
 	</div>
