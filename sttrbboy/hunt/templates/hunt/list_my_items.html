@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<br>
+<button class="btn btn-danger" onClick="hideAllByTag('id_tags')">Show All</button>
+
+<br><br>
+
+<button class="btn btn-danger" onClick="hideAllByTag('unclaimed')">Interested</button>
+<button class="btn btn-danger" onClick="hideAllByTag('started')">Started</button>
+<button class="btn btn-danger" onClick="hideAllByTag('completed')">Completed</button>
+
+<br><br>
+
+{% for item in items %}
+<div class="row">
+  <div class="col-md-2" id="{{ item.get_csv_tags }}">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><a href="{% url 'item|show' pk=item.pk %}">Item {{ item.number  }}</a>
+        {% if item.completed %}
+        <span class="label label-success">Done</span>
+        {% elif item.started %}
+        <span class="label label-warning">In Progress</span>
+        {% else %}
+        <span class="label label-danger">Interested</span>
+        {% endif %}
+      </h3>
+    </div>
+    <div class="panel-body">
+      {{ item.short_desc }}
+    </div>
+  </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
+{% block script %}
+  <script>
+    var hideAllByTag = function(tagName) {
+      allItems = nodeListToArr(document.querySelectorAll("[id^='id_tags']"));
+      items = nodeListToArr(document.querySelectorAll("[id*='"+tagName+"']"));
+      
+      diff = allItems.filter(x => items.indexOf(x) < 0);
+
+      for (i = 0; i < items.length; i++) {
+        $(items[i]).show();
+      }
+
+      for (i = 0; i < diff.length; i++) {
+        $(diff[i]).hide();
+      }
+		};
+
+    var nodeListToArr = function(nl) {
+      var arr = [];
+      for(var i = 0, n; n = nl[i]; ++i) arr.push(n);
+      return arr;
+    }
+  </script>
+{% endblock %}
