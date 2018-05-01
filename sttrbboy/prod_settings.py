@@ -3,6 +3,7 @@ from local_settings import *
 DEBUG = False 
 
 ALLOWED_HOSTS = ['www.sttr-bboy.us']
+CSRF_TRUSTED_ORIGINS = ['.sttr-bboy.us']
 
 ADMINS = (
     ('Administrator', 'admin@sttr-bboy.us'),
@@ -13,7 +14,7 @@ SERVER_EMAIL = 'noreply@sttr-bboy.us'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sttrbboy',                      # Or path to database file if using sqlite3.
+        'NAME': 'sttrbboy_prod',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
