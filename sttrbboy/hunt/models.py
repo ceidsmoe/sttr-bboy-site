@@ -6,6 +6,7 @@ import os
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from datetime import datetime
 
 from sttrbboy.overwrite_fs import OverwriteFileSystemStorage
 from sttrbboy import settings
@@ -66,9 +67,13 @@ class Page(models.Model):
 	number = models.IntegerField()
 	hunt = models.ForeignKey(Hunt, related_name='pages')
 	page_captain = models.ForeignKey(Scavvie, related_name='pages')
+	olympics = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		return "Page %d" % self.number
+		if self.olympics:
+			return "Scav Olympics"
+		else:
+			return "Page %d" % self.number
 
 
 class Tag(models.Model):
@@ -80,7 +85,7 @@ class Tag(models.Model):
 
 class Item(models.Model):
 	class Meta:
-		unique_together = ('number', 'hunt')
+		unique_together = ('number', 'hunt', 'olympics')
 
 	number = models.IntegerField()
 	points = models.DecimalField(max_digits=8, decimal_places=5)
@@ -88,17 +93,22 @@ class Item(models.Model):
 	full_desc = models.TextField(blank=True)
 	completed = models.BooleanField(default=False)
 	started = models.BooleanField(default=False)
+	olympics = models.BooleanField(default=False)
 
 	tags = models.ManyToManyField(Tag, related_name='items')
 	page = models.ForeignKey(Page, related_name='items')
 	hunt = models.ForeignKey(Hunt, related_name='items')
+	time = models.DateTimeField(blank=True, null=True)
 	page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
 	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items', blank=True)
 	working_scavvies = models.ManyToManyField(Scavvie, related_name='working_items', blank=True)
 	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items', blank=True)
 
 	def __unicode__(self):
-		return "Item %d - %s" % (self.number, self.short_desc)
+		if self.olympics:
+			return "Scav Olympics %d - %s" % (self.number, self.short_desc)
+		else:
+			return "Item %d - %s" % (self.number, self.short_desc)
 
 	def get_csv_tags(self):
 		status = "unclaimed"

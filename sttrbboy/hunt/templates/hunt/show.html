@@ -38,7 +38,7 @@
 <div class="row">
 	{% for page in pages %}
 	<div class="col-lg-2">
-		<h2><a href="{% url 'page|show' pk=page.pk %}">Page {{ page.number }}</a></h2>
+		<h2><a href="{% url 'page|show' pk=page.pk %}">{{ page }}</a></h2>
 	</div>
 	{% endfor %}
 </div>

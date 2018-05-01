@@ -9,6 +9,10 @@
 	</h3>
 </div>
 
+{% if item.time %}
+<h3>{{ item.time|timeuntil }} left to complete</h3>
+{% endif %}
+
 <p>{{ item.full_desc }}</p>
 
 {% if user.is_authenticated %}

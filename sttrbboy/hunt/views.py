@@ -167,4 +167,5 @@ class ShowMyItems(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(ShowMyItems, self).get_context_data(**kwargs)
 		context['items'] = Item.objects.filter(Q(hunt=self.hunt), Q(interested_scavvies=self.scavvie) | Q(working_scavvies=self.scavvie) | Q(completed_scavvies=self.scavvie) | Q(page_captain=self.scavvie))
+		context['tags'] = [it.title for it in Tag.objects.all()]
 		return context

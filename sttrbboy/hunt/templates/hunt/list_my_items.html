@@ -4,6 +4,10 @@
 <br>
 <button class="btn btn-danger" onClick="hideAllByTag('id_tags')">Show All</button>
 
+{% for tag in tags %}
+<button class="btn btn-danger" onClick="hideAllByTag('{{ tag.title }}')">{{ tag.title }}</button>
+{% endfor %}
+
 <br><br>
 
 <button class="btn btn-danger" onClick="hideAllByTag('unclaimed')">Interested</button>
@@ -17,7 +21,14 @@
   <div class="col-md-2" id="{{ item.get_csv_tags }}">
     <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title"><a href="{% url 'item|show' pk=item.pk %}">Item {{ item.number  }}</a>
+      <h3 class="panel-title">
+        <a href="{% url 'item|show' pk=item.pk %}">
+          {% if item.olympics %}
+          Scav Olympics {{ item.number }}
+          {% else %}
+          Item {{ item.number  }}
+          {% endif %}
+        </a>
         {% if item.completed %}
         <span class="label label-success">Done</span>
         {% elif item.started %}
