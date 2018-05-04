@@ -57,7 +57,10 @@ class Scavvie(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
 
 	def __unicode__(self):
-		return self.user.profile.name
+		if self.user.profile.name:
+			return self.user.profile.name
+		else:
+			return self.user.first_name + " " + self.user.last_name
 
 
 class Page(models.Model):

@@ -19,7 +19,10 @@ class Profile(models.Model):
 		return ("users|account",)
 
 	def __unicode__(self):
-		return self.name
+		if self.name:
+			return self.name
+		else:
+			return self.user.first_name + " " + self.user.last_name
 
 def get_or_create_profile(sender, **kwargs):
 	if not kwargs.get('raw'):
