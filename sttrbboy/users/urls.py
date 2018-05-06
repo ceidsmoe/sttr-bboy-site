@@ -15,10 +15,10 @@ urlpatterns = [
         {'post_reset_redirect' : '/users/password_reset_done/'},
         name="password_reset"),
     url(r'^password_reset_done/$',
-        password_reset_done),
+        password_reset_done, name="password_reset_done"),
     url(r'^password_reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', 
         password_reset_confirm, 
-        {'post_reset_redirect' : '/users/password_done/'}),
+        {'post_reset_redirect' : '/users/password_done/'}, name="password_reset_confirm"),
     url(r'^password_done/$', 
         password_reset_complete),
 ]

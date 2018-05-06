@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^item/(?P<pk>[0-9]+)/newcomment$', MakeNewComment.as_view(), name="new|comment"),
     url(r'hunt/(?P<pk>[0-9]+)/list_items/$', ShowItems.as_view(), name="hunt|list_items"),
     url(r'hunt/(?P<pk>[0-9]+)/list_my_items/$', ShowMyItems.as_view(), name="hunt|list_my_items"),
+    url(r'scavvie/(?P<pk>[0-9]+)/$', ShowScavvie.as_view(), name='scavvie|show'),
 ]

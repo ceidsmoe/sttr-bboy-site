@@ -21,3 +21,26 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+# Email settings
+try:
+	from secrets import EMAIL_HOST
+except:
+	EMAIL_HOST = ''
+
+try:
+	from secrets import EMAIL_PORT
+except:
+	EMAIL_PORT = ''
+
+try:
+	from secrets import EMAIL_HOST_USER
+except:
+	EMAIL_HOST_USER = ''
+
+try:
+	from secrets import EMAIL_HOST_PASSWORD
+except:
+	EMAIL_HOST_PASSWORD = ''
+
+EMAIL_USE_TLS = True

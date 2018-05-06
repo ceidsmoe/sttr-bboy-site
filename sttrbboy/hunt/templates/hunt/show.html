@@ -15,7 +15,7 @@
 	</div>
 	{% if hunt.list_pdf %}
 	<div class="col-lg-3">
-		<a href="{{ hunt.list_pdf.url }}"><h2>The List</h2></a>
+		<a href="{{ hunt.list_pdf.url }}"><h2>List PDF</h2></a>
 	</div>
 	{% endif %}
 	<div class="col-lg-3">
@@ -24,6 +24,11 @@
 	<div class="col-lg-3">
 		<h2><a href="{% url 'hunt|list_my_items' pk=hunt.pk %}">View My Items</a></h2>
 	</div>
+	{% if user.is_authenticated and hunt.status == "in_progress" %}
+	<div class="col-lg-3">
+		<h2><a href="">Scavvie Directory</a></h2>
+	</div>
+	{% endif %}
 </div>
 
 <div class="row">

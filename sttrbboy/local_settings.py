@@ -130,6 +130,11 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'STTR-BBoY <noreply@sttr-bboy.us>'
+SYMPA_FROM_EMAIL = 'admin@sttr-bboy.us'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

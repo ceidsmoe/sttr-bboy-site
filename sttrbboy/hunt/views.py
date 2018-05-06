@@ -169,3 +169,9 @@ class ShowMyItems(ListView):
 		context['items'] = Item.objects.filter(Q(hunt=self.hunt), Q(interested_scavvies=self.scavvie) | Q(working_scavvies=self.scavvie) | Q(completed_scavvies=self.scavvie) | Q(page_captain=self.scavvie))
 		context['tags'] = [it.title for it in Tag.objects.all()]
 		return context
+
+class ShowScavvie(DetailView):
+	template_name = "hunt/show_scavvie.html"
+	model = Scavvie
+
+	

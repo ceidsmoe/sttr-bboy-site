@@ -59,6 +59,10 @@ class Scavvie(models.Model):
 	def __unicode__(self):
 		return self.user.profile.name
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ('scavvie|show', [self.pk])
+
 
 class Page(models.Model):
 	class Meta:
