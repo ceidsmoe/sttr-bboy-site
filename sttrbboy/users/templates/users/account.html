@@ -7,9 +7,9 @@
 <form class="form-horizontal" method="post">
 	{% csrf_token %}
 	<div class="form-group">
-		<label for="id_phone_number" class="col-lg-2 control-label">Phone number (XXX-XXX-XXXX)</label>
+		<label for="id_phone_number" class="col-lg-2 control-label">Phone number (+1-XXX-XXX-XXXX)</label>
 		<div class="col-lg-3">
-			<input id="id_phone_number" class="form-control" type="text" name="phone_number" value="{{ form.phone_number.value|default_if_none:"" }}">
+			{{ form.phone_number }}
 			{{ form.phone_number.errors }}
 		</div>
 	</div>

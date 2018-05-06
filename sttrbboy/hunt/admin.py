@@ -16,7 +16,16 @@ class PageAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'page_captain')
 
 class ItemAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt', 'page_captain')
+	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt')
+
+	def get_form(self, request, obj=None, **kwargs):
+		self.exclude = ("page_captain", "hunt",)
+		return super(ItemAdmin, self).get_form(request, obj, **kwargs)
+
+	def save_model(self, request, obj, form, change):
+		obj.page_captain = obj.page.page_captain
+		obj.hunt = obj.page.hunt
+		super(ItemAdmin, self).save_model(request, obj, form, change)
 
 class CommentAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'item', 'scavvie')
