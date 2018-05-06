@@ -4,42 +4,24 @@
 <br>
 <button class="btn btn-danger" onClick="hideAllByTag('id_tags')">Show All</button>
 
-{% for tag in tags %}
-<button class="btn btn-danger" onClick="hideAllByTag('{{ tag.title }}')">{{ tag.title }}</button>
-{% endfor %}
-
-<br><br>
-
-<button class="btn btn-danger" onClick="hideAllByTag('unclaimed')">Interested</button>
-<button class="btn btn-danger" onClick="hideAllByTag('started')">Started</button>
-<button class="btn btn-danger" onClick="hideAllByTag('completed')">Completed</button>
+<button class="btn btn-danger" onClick="hideAllByTag('pc')">Page Captains</button>
 
 <br><br>
 
 <div class="row">
-{% for item in items %}
-  <div class="col-md-3" id="{{ item.get_csv_tags }}">
+{% for scavvie in scavvies %}
+  <div class="col-md-3" id="id_tags:{% if scavvie.page_captain %}pc{% endif %}">
     <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">
-        <a href="{% url 'item|show' pk=item.pk %}">
-          {% if item.olympics %}
-          Scav Olympics {{ item.number }}
-          {% else %}
-          Item {{ item.number  }}
-          {% endif %}
+        <a href="{% url 'scavvie|show' pk=scavvie.pk %}">
+          {{ scavvie }}
         </a>
-        {% if item.completed %}
-        <span class="label label-success">Done</span>
-        {% elif item.started %}
-        <span class="label label-warning">In Progress</span>
-        {% else %}
-        <span class="label label-danger">Interested</span>
-        {% endif %}
+        <span class="label label-info">{{ scavvie.user.profile.gender_pronouns }}</span>
       </h3>
     </div>
     <div class="panel-body">
-      {{ item.short_desc }}
+      Working on {{ scavvie.working_items.count }} {% if scavvie.working_items.count == 1 %} item {% else %} items {% endif %}
     </div>
   </div>
   </div>

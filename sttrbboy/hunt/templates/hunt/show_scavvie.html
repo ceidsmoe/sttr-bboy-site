@@ -1,11 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="page-header">
-	<h1>{{ scavvie.user.profile.name }}</h1>
+	<h1>{% if scavvie.captain %}Cap'n {% endif %}{{ scavvie.user.profile.name }}</h1>
+	<h3>Pronouns: {{ scavvie.user.profile.gender_pronouns }}</h3>
+	{% if user.is_authenticated %} <h3>Phone number: {{ scavvie.user.profile.phone_number }}</h3> {% endif %}
 </div>
 
-{% if user.is_authenticated %}
+{% if scavvie.page_captain %}
+<div class="row">
+	<h2>{% if scavvie.pages.count > 1 %} Pages {% else %} Page {% endif %} in Charge Of</h2>
+	{% for page in scavvie.pages.all %}
+		<h3><a href="{% url 'page|show' pk=page.pk %}">{{ page }}</a></h3>
+	{% endfor %}
+</div>
+{% endif %}
 
+<div class="row">
+<h2>Items Working On</h2>
+{% if scavvie.working_items.count > 0 %}
+{% for item in scavvie.working_items.all %}
+  <div class="col-md-2" id="{{ item.get_csv_tags }}">
+    <div class="panel panel-default">
+	    <div class="panel-heading">
+	      <h3 class="panel-title">
+	        <a href="{% url 'item|show' pk=item.pk %}">
+	          {% if item.olympics %}
+	          Scav Olympics {{ item.number }}
+	          {% else %}
+	          Item {{ item.number  }}
+	          {% endif %}
+	        </a>
+	        {% if item.completed %}
+	        <span class="label label-success">Done</span>
+	        {% elif item.started %}
+	        <span class="label label-warning">In Progress</span>
+	        {% else %}
+	        <span class="label label-danger">Unclaimed</span>
+	        {% endif %}
+	      </h3>
+	    </div>
+    <div class="panel-body">
+      {{ item.short_desc }}
+    </div>
+  </div>
+  </div>
+{% endfor %}
+{% else %}
+	<h3>Nothing here yet!</h3>
+{% endif %}
+</div>
+
+<div class="row">
+<h2>Interested items</h2>
+{% if scavvie.interested_items.count > 0 %}
+{% for item in scavvie.interested_items.all %}
+  <div class="col-md-2" id="{{ item.get_csv_tags }}">
+    <div class="panel panel-default">
+	    <div class="panel-heading">
+	      <h3 class="panel-title">
+	        <a href="{% url 'item|show' pk=item.pk %}">
+	          {% if item.olympics %}
+	          Scav Olympics {{ item.number }}
+	          {% else %}
+	          Item {{ item.number  }}
+	          {% endif %}
+	        </a>
+	        {% if item.completed %}
+	        <span class="label label-success">Done</span>
+	        {% elif item.started %}
+	        <span class="label label-warning">In Progress</span>
+	        {% else %}
+	        <span class="label label-danger">Unclaimed</span>
+	        {% endif %}
+	      </h3>
+	    </div>
+    <div class="panel-body">
+      {{ item.short_desc }}
+    </div>
+  </div>
+  </div>
+{% endfor %}
+{% else %}
+	<h3>Nothing here yet!</h3>
 {% endif %}
 
 {% endblock %}

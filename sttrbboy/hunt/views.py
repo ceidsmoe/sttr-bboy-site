@@ -174,4 +174,16 @@ class ShowScavvie(DetailView):
 	template_name = "hunt/show_scavvie.html"
 	model = Scavvie
 
-	
+class ScavvieDirectory(ListView):
+	template_name = "hunt/scavvie_directory.html"
+	model = Scavvie
+
+	@method_decorator(login_required)
+	def dispatch(self, request, *args, **kwargs):
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
+		return super(ScavvieDirectory, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, **kwargs):
+		context = super(ScavvieDirectory, self).get_context_data(**kwargs)
+		context['scavvies'] = Scavvie.objects.filter(hunt=self.hunt)
+		return context
