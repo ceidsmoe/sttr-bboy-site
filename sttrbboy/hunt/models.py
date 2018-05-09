@@ -69,16 +69,19 @@ class Scavvie(models.Model):
 
 class Page(models.Model):
 	class Meta:
-		unique_together = ('number', 'hunt')
+		unique_together = ('number', 'hunt', 'roadtrip')
 
 	number = models.IntegerField()
 	hunt = models.ForeignKey(Hunt, related_name='pages')
-	page_captain = models.ForeignKey(Scavvie, related_name='pages')
+	page_captain = models.ForeignKey(Scavvie, blank=True, null=True, related_name='pages')
 	olympics = models.BooleanField(default=False)
+	roadtrip = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		if self.olympics:
 			return "Scav Olympics"
+		elif self.roadtrip:
+			return "Road Trip %d" % self.number
 		else:
 			return "Page %d" % self.number
 
@@ -92,7 +95,7 @@ class Tag(models.Model):
 
 class Item(models.Model):
 	class Meta:
-		unique_together = ('number', 'hunt', 'olympics')
+		unique_together = ('number', 'hunt', 'olympics', 'roadtrip')
 
 	number = models.IntegerField()
 	points = models.DecimalField(max_digits=8, decimal_places=5)
@@ -101,12 +104,13 @@ class Item(models.Model):
 	completed = models.BooleanField(default=False)
 	started = models.BooleanField(default=False)
 	olympics = models.BooleanField(default=False)
+	roadtrip = models.BooleanField(default=False)
 
 	tags = models.ManyToManyField(Tag, related_name='items')
 	page = models.ForeignKey(Page, related_name='items')
 	hunt = models.ForeignKey(Hunt, related_name='items')
 	time = models.DateTimeField(blank=True, null=True)
-	page_captain = models.ForeignKey(Scavvie, related_name='captaining_items')
+	page_captain = models.ForeignKey(Scavvie, blank=True, null=True, related_name='captaining_items')
 	interested_scavvies = models.ManyToManyField(Scavvie, related_name='interested_items', blank=True)
 	working_scavvies = models.ManyToManyField(Scavvie, related_name='working_items', blank=True)
 	completed_scavvies = models.ManyToManyField(Scavvie, related_name='completed_items', blank=True)
