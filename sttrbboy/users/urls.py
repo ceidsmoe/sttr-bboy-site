@@ -13,7 +13,7 @@ urlpatterns = [
 
     url(r'^password_reset/$', 
         password_reset, 
-        {'post_reset_redirect' : '/users/password_reset_done/'},
+        {'post_reset_redirect' : '/users/password_reset_done/', 'template_name': 'users/emails/password_reset.html', 'subject_template_name': 'users/emails/subject.txt'},
         name="password_reset"),
     url(r'^password_reset_done/$',
         password_reset_done, name="password_reset_done"),
