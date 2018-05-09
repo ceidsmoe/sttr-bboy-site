@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic.base import RedirectView
+from django.views.generic.base import TemplateView, RedirectView
 
 from sttrbboy.users import views
 
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^', include('sttrbboy.hunt.urls')),
     url(r'^users/', include('sttrbboy.users.urls')),
     url(r'^contact/$', views.ContactPage.as_view(), name="contact"),
+    url(r'^terms/$', TemplateView.as_view(template_name='terms.html'), name='terms'),
     url(r'^accounts/profile/$', RedirectView.as_view(pattern_name='users|account'))
 ]
 
