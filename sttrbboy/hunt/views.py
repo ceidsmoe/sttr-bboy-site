@@ -91,7 +91,9 @@ class ShowItem(UpdateView):
 
 	def dispatch(self, request, *args, **kwargs):
 		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
-		if Scavvie.objects.filter(hunt=self.item.hunt, user=request.user).exists():
+		if not request.user.is_authenticated():
+			self.scavvie = None
+		elif Scavvie.objects.filter(hunt=self.item.hunt, user=request.user).exists():
 			self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
 		else:
 			self.scavvie = None
