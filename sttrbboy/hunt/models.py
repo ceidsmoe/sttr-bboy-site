@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import os
 
+from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -71,7 +72,7 @@ class Page(models.Model):
 	class Meta:
 		unique_together = ('number', 'hunt', 'roadtrip')
 
-	number = models.IntegerField()
+	number = models.IntegerField(validators=[MinValueValidator(0)])
 	hunt = models.ForeignKey(Hunt, related_name='pages')
 	page_captain = models.ForeignKey(Scavvie, blank=True, null=True, related_name='pages')
 	olympics = models.BooleanField(default=False)
@@ -81,9 +82,18 @@ class Page(models.Model):
 		if self.olympics:
 			return "Scav Olympics"
 		elif self.roadtrip:
-			return "Road Trip %d" % self.number
+			return "Page %d (Road Trip)" % self.number
 		else:
 			return "Page %d" % self.number
+
+	@models.permalink
+	def get_absolute_url(self):
+		if self.olympics:
+			return ('olympicspage|show', [self.hunt.pk, self.number]) 
+		elif self.roadtrip:
+			return ('roadtrippage|show', [self.hunt.pk, self.number])
+		else:
+			return ('page|show', [self.hunt.pk, self.number])
 
 
 class Tag(models.Model):
@@ -97,7 +107,7 @@ class Item(models.Model):
 	class Meta:
 		unique_together = ('number', 'hunt', 'olympics', 'roadtrip')
 
-	number = models.IntegerField()
+	number = models.IntegerField(validators=[MinValueValidator(0)])
 	points = models.DecimalField(max_digits=8, decimal_places=5)
 	short_desc = models.CharField(max_length=128)
 	full_desc = models.TextField(blank=True)
@@ -132,7 +142,12 @@ class Item(models.Model):
 
 	@models.permalink
 	def get_absolute_url(self):
-		return ('item|show', [self.pk])
+		if self.olympics:
+			return ('olympicsitem|show', [self.hunt.pk, self.number]) 
+		elif self.roadtrip:
+			return ('roadtripitem|show', [self.hunt.pk, self.number])
+		else:
+			return ('item|show', [self.hunt.pk, self.number])
 
 class Comment(models.Model):
 	text = models.CharField(max_length=512)

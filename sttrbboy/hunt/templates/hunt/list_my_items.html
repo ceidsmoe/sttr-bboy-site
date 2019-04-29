@@ -22,7 +22,7 @@
     <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">
-        <a href="{% url 'item|show' pk=item.pk %}">
+        <a href="{{ item.get_absolute_url }}">
           {% if item.olympics %}
           Scav Olympics {{ item.number }}
           {% else %}

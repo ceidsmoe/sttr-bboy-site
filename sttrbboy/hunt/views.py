@@ -69,9 +69,27 @@ class ShowPage(DetailView):
 	model = Page
 	template_name = 'hunt/show_page.html'
 
+	def dispatch(self, request, *args, **kwargs):
+		is_olympics = "olympics" in request.path
+		is_roadtrip = "roadtrip" in request.path
+
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['huntpk'])
+
+		if int(self.kwargs['pk']) > Page.objects.filter(hunt=self.hunt).count():
+			raise Http404('No such page for this Scav')
+
+		if Page.objects.filter(number=self.kwargs['pk'], hunt=self.hunt).count() > 1:
+			self.page = get_object_or_404(Page, number=self.kwargs['pk'], hunt=self.hunt, olympics=is_olympics, roadtrip=is_roadtrip)
+		else:	
+			self.page = get_object_or_404(Page, number=self.kwargs['pk'], hunt=self.hunt)
+
+		self.kwargs['pk'] = self.page.pk
+		
+		return super(ShowPage, self).dispatch(request, *args, **kwargs)
+
 	def get_context_data(self, **kwargs):
 		context = super(ShowPage, self).get_context_data(**kwargs)
-		context['items'] = self.object.items.all()
+		context['items'] = self.page.items.all()
 		return context
 
 
@@ -90,13 +108,27 @@ class ShowItem(UpdateView):
 		return context
 
 	def dispatch(self, request, *args, **kwargs):
-		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['huntpk'])
+
+		is_olympics = "olympics" in request.path
+		is_roadtrip = "roadtrip" in request.path
+
+		if int(self.kwargs['pk']) > Item.objects.filter(hunt=self.hunt).count():
+			raise Http404('No such item for this Scav')
+
+		if Item.objects.filter(number=self.kwargs['pk']).count() > 1:
+			self.item = get_object_or_404(Item, number=self.kwargs['pk'], hunt=self.hunt, roadtrip=is_roadtrip, olympics=is_olympics)
+		else:
+			self.item = get_object_or_404(Item, number=self.kwargs['pk'], hunt=self.hunt)
 		if not request.user.is_authenticated():
 			self.scavvie = None
 		elif Scavvie.objects.filter(hunt=self.item.hunt, user=request.user).exists():
 			self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
 		else:
 			self.scavvie = None
+
+		self.kwargs['pk'] = self.item.pk
+
 		return super(ShowItem, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
@@ -129,8 +161,17 @@ class MakeNewComment(FormView):
 
 	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
-		self.item = get_object_or_404(Item, id=self.kwargs['pk'])
-		self.scavvie = get_object_or_404(Scavvie, hunt=self.item.hunt, user=request.user)
+		is_olympics = "olympics" in request.path
+		is_roadtrip = "roadtrip" in request.path
+
+		self.hunt = get_object_or_404(Hunt, id=self.kwargs['huntpk'])
+		self.scavvie = get_object_or_404(Scavvie, hunt=self.hunt, user=request.user)
+
+		if Item.objects.filter(number=self.kwargs['pk']).count() > 1:
+			self.item = get_object_or_404(Item, number=self.kwargs['pk'], hunt=self.hunt, roadtrip=is_roadtrip, olympics=is_olympics)
+		else:
+			self.item = get_object_or_404(Item, number=self.kwargs['pk'], hunt=self.hunt)
+
 		return super(MakeNewComment, self).dispatch(request, *args, **kwargs)
 
 	def form_valid(self, form):
@@ -140,6 +181,7 @@ class MakeNewComment(FormView):
 		comment.save()
 		messages.success(self.request, "Your comment on item %d has been posted!" % (self.item.number))
 		return HttpResponseRedirect(self.item.get_absolute_url())
+
 
 
 class ShowItems(ListView):
@@ -163,7 +205,7 @@ class ShowMyItems(ListView):
 	@method_decorator(login_required)
 	def dispatch(self, request, *args, **kwargs):
 		self.hunt = get_object_or_404(Hunt, id=self.kwargs['pk'])
-		self.scavvie = get_object_or_404(Scavvie, user=request.user)
+		self.scavvie = get_object_or_404(Scavvie, user=request.user, hunt=self.hunt)
 		return super(ShowMyItems, self).dispatch(request, *args, **kwargs)
 
 	def get_context_data(self, **kwargs):

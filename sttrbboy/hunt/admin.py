@@ -14,9 +14,11 @@ class ScavvieAdmin(admin.ModelAdmin):
 
 class PageAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'page_captain')
+	list_filter = ('olympics', 'roadtrip', 'hunt')
 
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt')
+	list_filter = ('olympics', 'roadtrip', 'hunt')
 
 	def get_form(self, request, obj=None, **kwargs):
 		self.exclude = ("page_captain", "hunt",)

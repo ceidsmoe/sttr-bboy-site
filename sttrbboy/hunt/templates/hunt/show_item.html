@@ -65,7 +65,13 @@
 
 <h2>Comments</h2> 
 
-<a href="{% url 'new|comment' pk=item.pk %}"><button class="btn btn-success">Add Comment</button></a><br><br>
+{% if item.olympics %}
+<a href="{% url 'olympicsnew|comment' pk=item.number huntpk=item.hunt.pk %}"><button class="btn btn-success">Add Comment</button></a><br><br>
+{% elif item.roadtrip %}
+<a href="{% url 'roadtripnew|comment' pk=item.number huntpk=item.hunt.pk %}"><button class="btn btn-success">Add Comment</button></a><br><br>
+{% else %}
+<a href="{% url 'new|comment' pk=item.number huntpk=item.hunt.pk %}"><button class="btn btn-success">Add Comment</button></a><br><br>
+{% endif %}
 
 {% if comments %}
 	{% for comment in comments %}
