@@ -110,9 +110,6 @@ class ShowItem(UpdateView):
 		is_olympics = "olympics" in request.path
 		is_roadtrip = "roadtrip" in request.path
 
-		if int(self.kwargs['pk']) > Item.objects.filter(hunt=self.hunt).count():
-			raise Http404('No such item for this Scav')
-
 		if Item.objects.filter(number=self.kwargs['pk']).count() > 1:
 			self.item = get_object_or_404(Item, number=self.kwargs['pk'], hunt=self.hunt, roadtrip=is_roadtrip, olympics=is_olympics)
 		else:

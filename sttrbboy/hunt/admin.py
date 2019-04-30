@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.db.models import Q
 from sttrbboy.hunt.models import *
 
 # Register your models here.
@@ -11,14 +12,25 @@ class HuntAdmin(admin.ModelAdmin):
 
 class ScavvieAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'user', 'hunt', 'page_captain', 'captain')
+	list_filter = ('hunt', 'page_captain', 'captain')
 
 class PageAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'page_captain')
 	list_filter = ('olympics', 'roadtrip', 'hunt')
 
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		if db_field.remote_field.model == Scavvie and not request.user.is_superuser:
+			kwargs['queryset'] = Scavvie.objects.filter(Q(hunt=Hunt.objects.all()[Hunt.objects.count()-1]), Q(page_captain=True) | Q(captain=True))
+
+		return super(PageAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('__unicode__', 'number', 'points', 'short_desc', 'completed', 'started', 'hunt')
 	list_filter = ('olympics', 'roadtrip', 'hunt')
+
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		kwargs['queryset'] = Page.objects.filter(hunt=Hunt.objects.all()[Hunt.objects.count()-1])
+		return super(ItemAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 	def get_form(self, request, obj=None, **kwargs):
 		self.exclude = ("page_captain", "hunt",)
