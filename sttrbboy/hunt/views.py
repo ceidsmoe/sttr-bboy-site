@@ -75,9 +75,6 @@ class ShowPage(DetailView):
 
 		self.hunt = get_object_or_404(Hunt, id=self.kwargs['huntpk'])
 
-		if int(self.kwargs['pk']) > Page.objects.filter(hunt=self.hunt).count():
-			raise Http404('No such page for this Scav')
-
 		if Page.objects.filter(number=self.kwargs['pk'], hunt=self.hunt).count() > 1:
 			self.page = get_object_or_404(Page, number=self.kwargs['pk'], hunt=self.hunt, olympics=is_olympics, roadtrip=is_roadtrip)
 		else:	
