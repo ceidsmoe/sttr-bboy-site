@@ -56,11 +56,12 @@ class ShowHunt(DetailView):
 
 		if self.request.user.is_authenticated():
 			in_hunt = Scavvie.objects.filter(hunt=self.object, user=self.request.user).exists()
-			if in_hunt:
-				scavvie = Scavvie.objects.get(hunt=self.object, user=self.request.user)
-				context['scavvie'] = scavvie
-				if self.object.status in ('in_progress', 'finished'):
-					pass
+			if not in_hunt:
+				Scavvie.objects.create(hunt=self.object, user=self.request.user)
+
+			scavvie = Scavvie.objects.get(hunt=self.object, user=self.request.user)
+			context['scavvie'] = scavvie
+				
 		
 		return context
 
