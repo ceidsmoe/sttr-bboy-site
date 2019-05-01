@@ -156,11 +156,3 @@ class Comment(models.Model):
 
 	def __unicode__(self):
 		return self.scavvie.user.profile.name + " " + self.text
-
-
-def get_or_create_scavvie(sender, **kwargs):
-	if not kwargs.get('raw'):
-		for hunt in Hunt.objects.all():
-			scavvie, created = Scavvie.objects.get_or_create(user=kwargs['instance'], hunt=hunt)
-
-models.signals.post_save.connect(get_or_create_scavvie, sender=User)
